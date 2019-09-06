@@ -21,7 +21,9 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lombok.Data;
 
@@ -78,15 +80,24 @@ public class PieChartData implements OnChartValueSelectedListener {
     private void setData() {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
+        Map<String,Float> map = new HashMap<> ();
         billList.forEach (bill -> {
+            String key = bill.getExpenditure ().getName ();
+            Float value = Float.valueOf (bill.getAmount ().toString ());
+            if(map.containsKey (key)){
+                value += map.get (key);
+            }
+            map.put (key,value);
+        });
+        /*billList.forEach (bill -> {
             double amount = bill.getAmount ();
             String label = bill.getExpenditure ().getName ();
             if(bill.getRemark ()!=null&&!bill.getRemark ().equals ("")){
                 label += "-"+ bill.getRemark ();
             }
             entries.add(new PieEntry((float) (amount), label));
-        });
-
+        });*/
+        map.forEach ((label,amount)->entries.add(new PieEntry((amount), label)));
         PieDataSet dataSet = new PieDataSet(entries, "Election Results");
         dataSet.setSliceSpace(3f);
         dataSet.setSelectionShift(5f);

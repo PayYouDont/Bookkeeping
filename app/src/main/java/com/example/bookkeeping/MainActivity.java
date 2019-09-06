@@ -43,9 +43,6 @@ public class MainActivity extends AppCompatActivity{
         NavController navController = Navigation.findNavController (this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController (this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController (navView, navController);
-        navController.addOnDestinationChangedListener ((controller, destination, arguments) -> {
-
-        });
        /* View view = findViewById (R.id.navigation_edit);
         View.OnClickListener onClickListener = view*/
         //初始化消费类型表

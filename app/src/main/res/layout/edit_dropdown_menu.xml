@@ -4,7 +4,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_margin="15dp"
-        android:layout_gravity="bottom"
+        android:layout_gravity="top"
         android:background="@drawable/border_all_radian">
     <TextView
             android:layout_width="match_parent"
@@ -21,8 +21,9 @@
             android:rowCount="4"
             android:layout_margin="20dp">
         <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/dropdown_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
     </GridLayout>
 
 </LinearLayout>

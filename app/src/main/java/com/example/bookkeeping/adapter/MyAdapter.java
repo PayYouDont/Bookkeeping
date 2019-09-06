@@ -42,8 +42,7 @@ public abstract  class MyAdapter <T> extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = ViewHolder.bind(parent.getContext(), convertView, parent, mLayoutRes
-                , position);
+        ViewHolder holder = ViewHolder.bind(parent.getContext(), convertView, parent, mLayoutRes, position);
         bindView(holder, getItem(position));
         return holder.getItemView();
     }

@@ -22,23 +22,23 @@ import lombok.Setter;
 
 public class BillAdapter extends RecyclerView.Adapter {
     private List<Bill> billList;
+    private View isRemoveStateBtn;
+    @Setter
+    private OnremoveListnner onremoveListnner;
+
     public BillAdapter(List<Bill> billList){
         this.billList = billList;
     }
-    private View isRemoveStateBtn;
     public interface OnremoveListnner{
         void  ondelete(int index,View removeBtn);
     }
-    @Setter
-    private OnremoveListnner onremoveListnner;
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from (parent.getContext ()).inflate (R.layout.history_bill_item,parent,false);
         ViewHolder holder = new ViewHolder (view);
         holder.billView.setOnClickListener (v -> {
-            int postion = holder.getAdapterPosition ();
-            Bill bill = billList.get (postion);
+            Bill bill = billList.get (holder.getAdapterPosition ());
             EditFragment.bill = bill;
             BottomNavigationView navigation = view.getRootView ().findViewById (R.id.nav_view);
             navigation.setSelectedItemId(navigation.getMenu().getItem(1).getItemId());

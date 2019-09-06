@@ -15,8 +15,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bookkeeping.R;
+import com.example.bookkeeping.adapter.ConsumeTypeAdapter;
+import com.example.bookkeeping.adapter.DropdownSpinnerAdapter;
 import com.example.bookkeeping.datepicker.CustomDatePicker;
 import com.example.bookkeeping.datepicker.DateFormatUtils;
 import com.example.bookkeeping.entity.Bill;
@@ -32,19 +35,15 @@ import java.util.List;
 import lombok.Setter;
 
 public class EditFragment extends Fragment implements View.OnClickListener{
-    private TextView mTvSelectedTime;
+    private TextView mTvSelectedTime,dateText;
     private CustomDatePicker mTimerPicker;
     private View root;
-    //消费类型下拉控件
-    private Spinner consumeTypeSpinner;
-    //支付方式下拉控件
-    private Spinner payMethodSpinner;
+    //消费类型下拉控件,支付方式下拉控件
+    private Spinner consumeTypeSpinner,payMethodSpinner;
     @Setter
     public static Bill bill;
     //金额输入框
     private EditText consumeText,remarkText;
-    //日期
-    private TextView dateText;
     private ImageView consumeImageView;
     private Bill billInstance;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -119,21 +118,18 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         PayMethod payMethod = LitePal.find (PayMethod.class,Integer.valueOf (SpinnerData.getSpinnerSelVal (payMethodSpinner)));
         String consumptionTime = dateText.getText ().toString ();
         String remark = remarkText.getText ().toString ();
-        Bill bill;
-        if(billInstance!=null){
-            bill = billInstance;
-        }else {
-            bill = new Bill ();
+        if(billInstance==null){
+            billInstance = new Bill ();
         }
-        bill.setAmount (Double.valueOf (amount));
-        bill.setExpenditureId (expenditure.getId ());
-        bill.setPayMethodId (payMethod.getId ());
-        bill.setConsumptionTime (consumptionTime);
-        bill.setRemark (remark);
-        if(bill.getId ()!=null){
-            bill.saveOrUpdate ("id="+bill.getId ());
+        billInstance.setAmount (Double.valueOf (amount));
+        billInstance.setExpenditureId (expenditure.getId ());
+        billInstance.setPayMethodId (payMethod.getId ());
+        billInstance.setConsumptionTime (consumptionTime);
+        billInstance.setRemark (remark);
+        if(billInstance.getId ()!=null){
+            billInstance.saveOrUpdate ("id="+billInstance.getId ());
         }else{
-            bill.save ();
+            billInstance.save ();
         }
         View view = root.getRootView ().findViewById (R.id.navigation_history);
         view.performClick();
@@ -152,7 +148,8 @@ public class EditFragment extends Fragment implements View.OnClickListener{
             }
             data.add (spinnerData);
         }
-        ArrayAdapter<SpinnerData> adapter = new ArrayAdapter<> (root.getContext (),android.R.layout.simple_spinner_item,data);
+        //ArrayAdapter<SpinnerData> adapter = new ArrayAdapter<> (root.getContext (),android.R.layout.simple_spinner_item,data);
+        DropdownSpinnerAdapter adapter = new DropdownSpinnerAdapter(root.getContext (),android.R.layout.simple_spinner_item,expenditures);
         //设置下拉列表的风格
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //消费类型下拉
@@ -185,7 +182,7 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         payMethodSpinner = root.findViewById (R.id.pay_method);
         ArrayAdapter<SpinnerData> payMethodAdapter = new ArrayAdapter<> (root.getContext (),android.R.layout.simple_spinner_item,data2);
         //设置下拉列表的风格
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        payMethodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         payMethodSpinner.setAdapter (payMethodAdapter);
         payMethodSpinner.setSelection (position);
     }
