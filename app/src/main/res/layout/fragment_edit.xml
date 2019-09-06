@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FCF5F5">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/border_all">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp">
+
+            <EditText
+                    android:id="@+id/consume_count"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:inputType="numberDecimal"
+                    android:hint="输入金额" />
+
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/border_right"
+                    android:hint="元  " />
+
+            <ImageView
+                    android:id="@+id/consume_type_img"
+                    android:layout_width="@dimen/edit_consume_type_img_width"
+                    android:layout_height="@dimen/edit_consume_type_img_height"
+                    android:layout_gravity="center"/>
+
+            <Spinner
+                    android:id="@+id/consume_type_spinner"
+                    android:spinnerMode="dialog"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/border_all">
+            <LinearLayout
+                    android:id="@+id/ll_time"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_selected_time"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textSize="20dp"
+                        android:gravity="center_vertical|left"/>
+
+                <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="20dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/border_right"
+                        android:hint="   " />
+            </LinearLayout>
+            <Spinner
+                    android:id="@+id/pay_method"
+                    android:spinnerMode="dialog"
+                    android:layout_width="140dp"
+                    android:layout_height="match_parent" />
+        </LinearLayout>
+        <EditText
+                android:id="@+id/remark"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@null"
+                android:layout_marginLeft="10dp"
+                android:hint="备注"/>
+        </LinearLayout>
+        <Button
+                android:id="@+id/edit_save_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="保存修改"
+                android:textColor="#FFF"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:background="#0099ff"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
