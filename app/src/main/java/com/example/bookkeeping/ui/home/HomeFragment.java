@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -12,7 +13,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.bookkeeping.R;
-import com.example.bookkeeping.chart.BarChartData;
 import com.example.bookkeeping.chart.MyProgressBar;
 import com.example.bookkeeping.chart.PieChartData;
 import com.example.bookkeeping.datepicker.CustomDatePicker;
@@ -21,7 +21,6 @@ import com.example.bookkeeping.entity.BaseFragment;
 import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.ProgressData;
 import com.example.bookkeeping.util.StringUtil;
-import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 
 import org.litepal.LitePal;
@@ -34,7 +33,6 @@ public class HomeFragment extends BaseFragment {
     private View root;
     private ProgressData progressData;
     private PieChart pieChart;
-    //private BarChart barChart;
     private MyProgressBar progressBar;
     private EditText startDateText,endDateText,expectedDateText,totalText;
     private CustomDatePicker startTimerPicker,endTimerPicker,expectedPicker;
@@ -45,10 +43,13 @@ public class HomeFragment extends BaseFragment {
         root = inflater.inflate (R.layout.fragment_home, container, false);
         //进度条数据结束
         totalText = root.findViewById (R.id.home_total_text);
-        totalText.setOnFocusChangeListener ((v, hasFocus) -> {
-            if(!hasFocus){
+        totalText.setOnEditorActionListener ((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                //在这个方法中处理你需要处理的事件
                 saveData ();
+                return true;
             }
+            return false;
         });
         //timePicker
         startDateText = root.findViewById (R.id.home_start_date);
@@ -59,7 +60,6 @@ public class HomeFragment extends BaseFragment {
         expectedDateText.setOnClickListener (v ->  expectedPicker.show(expectedDateText.getText().toString()));
         //chart
         pieChart = root.findViewById (R.id.home_chart_pie);
-        //barChart = root.findViewById (R.id.home_chart_bar);
         progressBar = root.findViewById (R.id.home_progressBar);
         initProgressBar();
         //radio
@@ -168,7 +168,6 @@ public class HomeFragment extends BaseFragment {
         List<Bill> billList = LitePal.where (whereSql).find (Bill.class);
         billList.forEach (bill -> currentAmount += bill.getAmount ());
         new PieChartData (pieChart,root,billList);
-        //new BarChartData (barChart,root,billList);
         saveData();
     }
     //保存数据
