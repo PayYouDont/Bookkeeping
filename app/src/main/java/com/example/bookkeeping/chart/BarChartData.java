@@ -31,7 +31,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class BarChartData extends BaseChartData implements OnChartValueSelectedListener {
+public class BarChartData extends BaseChartData implements OnChartValueSelectedListener{
     private BarChart chart;
     public BarChartData(BarChart chart, View root, List<Bill> billList) {
         super(billList,root);
@@ -109,16 +109,18 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
             Float val = Float.valueOf (bill.getAmount ().toString ());
             values.add(new BarEntry(i, val));
         }
-
+        String label = "支出分布";
+        if(billList.size ()>0){
+            label = billList.get (0).getExpenditure ().getName ();
+        }
         BarDataSet set1;
-
         if (chart.getData() != null &&chart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
             set1.setValues(values);
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(values, "支出分布-柱状图");
+            set1 = new BarDataSet(values, label);
             set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
             //是否显示顶部的值
             set1.setDrawValues(true);
@@ -152,7 +154,6 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
     }
 
     @Override
-    public void onNothingSelected() {
+    public void onNothingSelected() {}
 
-    }
 }
