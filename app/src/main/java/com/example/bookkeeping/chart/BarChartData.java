@@ -5,9 +5,11 @@ import android.graphics.RectF;
 import android.util.Log;
 import android.view.View;
 
+import com.example.bookkeeping.datepicker.DateFormatUtils;
 import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.MyValueFormatter;
 import com.example.bookkeeping.entity.XYMarkerView;
+import com.example.bookkeeping.util.StringUtil;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -58,16 +60,17 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
                 int index = (int) value;
                 if(value<billList.size ()){
                     Bill bill = billList.get (index);
-                    return bill.getExpenditure ().getName ();
+                    String consumptionDate = DateFormatUtils.fomart (bill.getConsumptionTime (),"MM月dd日");
+                    return consumptionDate;
                 }
                 return "";
             }
         });
-        ValueFormatter custom = new MyValueFormatter ("￥");
+        //ValueFormatter custom = new MyValueFormatter ("￥");
         YAxis leftAxis = chart.getAxisLeft();
         leftAxis.setTypeface(tfLight);
         leftAxis.setLabelCount(8, false);
-        leftAxis.setValueFormatter(custom);
+        //leftAxis.setValueFormatter(custom);
         leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
         leftAxis.setSpaceTop(15f);
         leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
@@ -75,7 +78,7 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
         rightAxis.setDrawGridLines(false);
         rightAxis.setTypeface(tfLight);
         rightAxis.setLabelCount(8, false);
-        rightAxis.setValueFormatter(custom);
+        //rightAxis.setValueFormatter(custom);
         rightAxis.setSpaceTop(15f);
         rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
         Legend l = chart.getLegend();
@@ -93,7 +96,8 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
             public String getFormattedValue(float value) {
                 int index = (int) value;
                 Bill bill = billList.get (index);
-                return bill.getConsumptionTime ();
+                String consumptionDate = DateFormatUtils.fomart (bill.getConsumptionTime (),"HH时mm分");
+                return consumptionDate;
             }
         });
         mv.setBackgroundColor (Color.argb (125,135,135,135));
@@ -107,7 +111,7 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
         for (int i = 0; i < billList.size (); i++) {
             Bill bill = billList.get (i);
             Float val = Float.valueOf (bill.getAmount ().toString ());
-            values.add(new BarEntry(i, val));
+            values.add(new BarEntry(i, val,bill.getRemark ()));
         }
         String label = "支出分布";
         if(billList.size ()>0){
@@ -117,6 +121,7 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
         if (chart.getData() != null &&chart.getData().getDataSetCount() > 0) {
             set1 = (BarDataSet) chart.getData().getDataSetByIndex(0);
             set1.setValues(values);
+            set1.setLabel (label);
             chart.getData().notifyDataChanged();
             chart.notifyDataSetChanged();
         } else {

@@ -25,6 +25,7 @@ import com.github.mikephil.charting.charts.PieChart;
 
 import org.litepal.LitePal;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +39,7 @@ public class HomeFragment extends BaseFragment {
     private CustomDatePicker startTimerPicker,endTimerPicker,expectedPicker;
     private RadioGroup radioGroup;
     private Double currentAmount = 0d;
+    private List<Integer> groupIds;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         progressData = LitePal.find (ProgressData.class,1);
         root = inflater.inflate (R.layout.fragment_home, container, false);
@@ -61,11 +63,11 @@ public class HomeFragment extends BaseFragment {
         //chart
         pieChart = root.findViewById (R.id.home_chart_pie);
         progressBar = root.findViewById (R.id.home_progressBar);
-        initProgressBar();
+        init();
         //radio
         radioGroup = root.findViewById (R.id.home_radio_group);
         radioGroup.setOnCheckedChangeListener ((group, checkedId) -> showChart(checkedId));
-        if(progressData!=null&&progressData.getRadioGroupCheckedId ()!=0){
+        if(progressData!=null&&groupIds.contains (progressData.getRadioGroupCheckedId ())){
             radioGroup.check (progressData.getRadioGroupCheckedId ());
         }else{
             radioGroup.check (R.id.home_radio_customize);
@@ -73,8 +75,8 @@ public class HomeFragment extends BaseFragment {
         setRootHeight (root);
         return root;
     }
-    //初始化进度条
-    private void initProgressBar(){
+    //初始化相关数据
+    private void init(){
         TextView balanceText = root.findViewById (R.id.home_balance_text);
         TextView balanceNumberText = root.findViewById (R.id.home_balance_number);
         TextView spendText = root.findViewById (R.id.home_spend_text);
@@ -83,6 +85,11 @@ public class HomeFragment extends BaseFragment {
         progressBar.setBalanceNumberText (balanceNumberText);
         progressBar.setSpendText (spendText);
         progressBar.setSpendNumberText (spendNumberText);
+        groupIds = new ArrayList<> ();
+        groupIds.add (R.id.home_radio_year);
+        groupIds.add (R.id.home_radio_month);
+        groupIds.add (R.id.home_radio_day);
+        groupIds.add (R.id.home_radio_customize);
     }
     //选择时间后展示数据
     private void showChart(int checkId){

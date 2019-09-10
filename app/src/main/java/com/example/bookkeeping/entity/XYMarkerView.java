@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.example.bookkeeping.R;
 import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -38,8 +39,12 @@ public class XYMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-
-        tvContent.setText(String.format("%s \n支付:%s 元", xAxisValueFormatter.getFormattedValue(e.getX()), format.format(e.getY())));
+        if(e == null){
+            return;
+        }
+        BarEntry entry = (BarEntry) e;
+        String remark = entry.getData ().toString ();
+        tvContent.setText(String.format("%s 支付:%s 元\n 备注:"+remark, xAxisValueFormatter.getFormattedValue(e.getX()), format.format(e.getY())));
         super.refreshContent(e, highlight);
     }
 

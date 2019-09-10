@@ -18,6 +18,7 @@ import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.adapter.BillAdapter;
 import com.example.bookkeeping.adapter.ConsumeTypeAdapter;
+import com.example.bookkeeping.entity.BaseFragment;
 import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.Expenditure;
 import com.example.bookkeeping.ui.edit.EditFragment;
@@ -27,7 +28,7 @@ import org.litepal.LitePal;
 
 import java.util.List;
 
-public class HistoryFragment extends Fragment {
+public class HistoryFragment extends BaseFragment {
     private View root;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_history, container, false);
@@ -47,6 +48,7 @@ public class HistoryFragment extends Fragment {
             });
         });
         recyclerView.setAdapter (adapter);
+        setRootHeight (root);
         return root;
     }
    /* public static void toEditFragement(Fragment fragment){
