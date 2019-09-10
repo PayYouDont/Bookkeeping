@@ -7,10 +7,21 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.bookkeeping.R;
+
+import java.text.DecimalFormat;
+
+import lombok.Data;
+
+@Data
 public class MyProgressBar extends ProgressBar {
     private String text;
     private Paint mPaint;
+    private Double expectedCount;
+    private Double realCount;
+    private TextView balanceText,balanceNumberText,spendText,spendNumberText;
     public MyProgressBar(Context context) {
         super (context);
         initText();
@@ -18,8 +29,6 @@ public class MyProgressBar extends ProgressBar {
 
     public MyProgressBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        // TODO Auto-generated constructor stub
-        System.out.println("2");
         initText();
     }
 
@@ -57,5 +66,15 @@ public class MyProgressBar extends ProgressBar {
     private void setText(int progress){
         int i = (progress * 100)/this.getMax();
         this.text = i + "%";
+        if(expectedCount!=null&&realCount!=null){
+            DecimalFormat decimalFormat = new DecimalFormat ("#.00");
+            if(i<100){//有剩余
+                String balance = decimalFormat.format(expectedCount-realCount);
+                balanceNumberText.setText (balance);
+            }else{
+                balanceNumberText.setText ("0");
+            }
+            spendNumberText.setText (decimalFormat.format (realCount));
+        }
     }
 }

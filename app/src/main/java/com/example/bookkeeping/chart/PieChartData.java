@@ -7,8 +7,10 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
 
+import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.Bill;
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
@@ -30,10 +32,13 @@ import lombok.Data;
 @Data
 public class PieChartData implements OnChartValueSelectedListener {
     private PieChart chart;
+    private BarChart barChart;
     private List<Bill> billList;
     private View root;
+    private Map<String,List<Bill>> pieDataMap;
     public PieChartData(PieChart chart, View root,List<Bill> billList) {
         this.chart = chart;
+        barChart = root.findViewById (R.id.home_chart_bar);
         //chart.setUsePercentValues(true);//按百分比显示
         chart.getDescription().setEnabled(false);
         chart.setExtraOffsets(5, 10, 5, 5);
@@ -81,22 +86,19 @@ public class PieChartData implements OnChartValueSelectedListener {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         Map<String,Float> map = new HashMap<> ();
+        pieDataMap = new HashMap<> ();
         billList.forEach (bill -> {
             String key = bill.getExpenditure ().getName ();
             Float value = Float.valueOf (bill.getAmount ().toString ());
+            List<Bill> bills= new ArrayList<> ();
             if(map.containsKey (key)){
                 value += map.get (key);
+                bills = pieDataMap.get (key);
             }
+            bills.add (bill);
             map.put (key,value);
+            pieDataMap.put (key,bills);
         });
-        /*billList.forEach (bill -> {
-            double amount = bill.getAmount ();
-            String label = bill.getExpenditure ().getName ();
-            if(bill.getRemark ()!=null&&!bill.getRemark ().equals ("")){
-                label += "-"+ bill.getRemark ();
-            }
-            entries.add(new PieEntry((float) (amount), label));
-        });*/
         map.forEach ((label,amount)->entries.add(new PieEntry((amount), label)));
         PieDataSet dataSet = new PieDataSet(entries, "Election Results");
         dataSet.setSliceSpace(3f);
@@ -149,21 +151,24 @@ public class PieChartData implements OnChartValueSelectedListener {
     }
     @Override
     public void onValueSelected(Entry e, Highlight h) {
-
+        if (e == null){
+            return;
+        }
+        PieEntry pieEntry = (PieEntry ) e;
+        String label = pieEntry.getLabel ();
+        List<Bill> bills = pieDataMap.get (label);
+        new BarChartData (barChart,root,bills);
+        barChart.setVisibility (View.VISIBLE);
     }
 
     @Override
     public void onNothingSelected() {
-
+        barChart.setVisibility (View.GONE);
     }
     private SpannableString generateCenterSpannableText() {
-        SpannableString s = new SpannableString("支出分布\n饼状图");
+        SpannableString s = new SpannableString("支出分布");
         s.setSpan(new RelativeSizeSpan (1.5f), 0, 4, 0);
-        /*s.setSpan(new StyleSpan (Typeface.NORMAL), 0, s.length() - 15, 0);
-        s.setSpan(new ForegroundColorSpan (Color.GRAY), 0, s.length() - 15, 0);
-        s.setSpan(new RelativeSizeSpan(.65f), 0, s.length() - 15, 0);*/
         s.setSpan(new StyleSpan(Typeface.ITALIC), s.length() - 4, s.length(), 0);
-        //s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);
         return s;
     }
 }

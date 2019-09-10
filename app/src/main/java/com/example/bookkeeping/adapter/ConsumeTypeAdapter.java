@@ -14,9 +14,12 @@ import com.example.bookkeeping.entity.Expenditure;
 
 import java.util.List;
 
-public class ConsumeTypeAdapter extends RecyclerView.Adapter {
-    List<Expenditure> expenditures;
+import lombok.Setter;
 
+public class ConsumeTypeAdapter extends RecyclerView.Adapter {
+    private List<Expenditure> expenditures;
+    @Setter
+    private OnSelectItemListener onSelectItemListener;
     public ConsumeTypeAdapter(List<Expenditure> expenditures) {
         this.expenditures = expenditures;
     }
@@ -26,6 +29,12 @@ public class ConsumeTypeAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from (parent.getContext ()).inflate (R.layout.edit_dropdown_menu__item,parent,false);
         ConsumeTypeAdapter.ViewHolder holder = new ConsumeTypeAdapter.ViewHolder (view);
+        holder.consumeTypeView.setOnClickListener (v -> {
+            if(onSelectItemListener!=null){
+                onSelectItemListener.onSelect (holder.getAdapterPosition ());
+            }
+
+        });
         return holder;
     }
 
@@ -54,5 +63,7 @@ public class ConsumeTypeAdapter extends RecyclerView.Adapter {
             nameText = itemView.findViewById (R.id.dropdown_item_name);
         }
     }
-
+    public interface OnSelectItemListener{
+        void onSelect(int position);
+    }
 }

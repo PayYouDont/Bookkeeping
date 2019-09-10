@@ -104,6 +104,14 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
         initView();
         initData();
         mCanDialogShow = true;
+        // 允许点击屏幕或物理返回键关闭
+        setCancelable(true);
+        // 显示时和分
+        setCanShowPreciseTime(true);
+        // 允许循环滚动
+        setScrollLoop(true);
+        // 允许滚动动画
+        setCanShowAnim(true);
     }
 
     private void initView() {

@@ -13,4 +13,7 @@ public class ProgressData extends LitePalSupport {
     private String expectedDate;
     private String name;
     private Integer status;
+    private Integer radioGroupCheckedId;
+    private String startDate;
+    private String endDate;
 }

@@ -37,6 +37,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="前一天"/>
+                <RadioButton
+                        android:id="@+id/home_radio_customize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="自定义"/>
             </RadioGroup>
         </LinearLayout>
         <LinearLayout
@@ -87,27 +92,83 @@
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
                         android:hint="预期金额"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        android:text="预期时间:"/>
                 <EditText
                         android:id="@+id/home_expected_date"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:focusable="false"
-                        android:hint="预期时间"/>
-                <Button
-                        android:id="@+id/home_total_setting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:inputType="numberDecimal"
-                        android:text="设置"/>
+                        android:focusable="false"/>
             </LinearLayout>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="150dp"
+                    android:layout_gravity="right">
+                <ProgressBar
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:max="1"
+                        android:progress="0"/>
+                <TextView
+                        android:id="@+id/home_balance_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:text="：可用金额："/>
+                <TextView
+                        android:id="@+id/home_balance_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:text="0"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" 元"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="150dp"
+                    android:layout_gravity="right">
+            <ProgressBar
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="10dp"
+                    android:layout_height="wrap_content"
+                    android:max="1"
+                    android:progress="1"
+                    android:layout_gravity="right"/>
+                <TextView
+                        android:id="@+id/home_spend_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:text="：已用金额："/>
+                <TextView
+                        android:id="@+id/home_spend_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:text="0"/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:text=" 元"/>
+            </LinearLayout>/
             <com.example.bookkeeping.chart.MyProgressBar
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:id="@+id/home_progressBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:max="100"
-                    android:progress="18"
+                    android:progress="0"
                     android:layout_margin="10dp"/>
         </LinearLayout>
         <LinearLayout
@@ -127,7 +188,8 @@
             <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/home_chart_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
