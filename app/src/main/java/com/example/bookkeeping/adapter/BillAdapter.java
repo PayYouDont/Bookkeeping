@@ -34,15 +34,14 @@ public class BillAdapter extends RecyclerView.Adapter {
     public BillAdapter(List<Bill> billList){
         this.billList = billList;
         billMap = new HashMap<> ();
-        for(int i=0;i<billList.size ();i++){
-            Bill bill = billList.get (i);
+        billList.forEach (bill -> {
             String consumptionDate = DateFormatUtils.fomart (bill.getConsumptionTime (),"MM月dd日");
             Double amount = bill.getAmount ();
             if(billMap.containsKey (consumptionDate)){
                 amount += billMap.get (consumptionDate);
             }
             billMap.put (consumptionDate,amount);
-        }
+        });
     }
     public interface OnremoveListnner{
         void  ondelete(int index,View removeBtn);
@@ -76,11 +75,15 @@ public class BillAdapter extends RecyclerView.Adapter {
         ViewHolder viewHolder = (ViewHolder) holder;
         String consumptionDate = DateFormatUtils.fomart (bill.getConsumptionTime (),"MM月dd日");
         viewHolder.consumptionDate.setText (consumptionDate);
-        if(position>0){//将日期相同的放在一起只显示第一个日期栏
+        if(position==0){
+            viewHolder.dateLayout.setVisibility (View.VISIBLE);
+        }else{//将日期相同的放在一起只显示第一个日期栏
             int prev = position - 1;
             String beforeTime = DateFormatUtils.fomart (billList.get (prev).getConsumptionTime (),"MM月dd日");
             if(beforeTime.equals (consumptionDate)){
                 viewHolder.dateLayout.setVisibility (View.GONE);
+            }else{
+                viewHolder.dateLayout.setVisibility (View.VISIBLE);
             }
         }
         viewHolder.dayTotal.setText (StringUtil.formatDouble (billMap.get (consumptionDate)));

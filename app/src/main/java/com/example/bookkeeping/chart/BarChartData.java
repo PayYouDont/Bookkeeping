@@ -7,9 +7,7 @@ import android.view.View;
 
 import com.example.bookkeeping.datepicker.DateFormatUtils;
 import com.example.bookkeeping.entity.Bill;
-import com.example.bookkeeping.entity.MyValueFormatter;
 import com.example.bookkeeping.entity.XYMarkerView;
-import com.example.bookkeeping.util.StringUtil;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -129,8 +127,8 @@ public class BarChartData extends BaseChartData implements OnChartValueSelectedL
             set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
             //是否显示顶部的值
             set1.setDrawValues(true);
-
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);
