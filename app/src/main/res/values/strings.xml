@@ -17,5 +17,6 @@
     <string name="current_date">当前日期</string>
     <string name="select_time">选择时间</string>
     <string name="current_time">当前时间</string>
-
+    <string name="server_ip">http://106.13.212.169</string>
+    <!--<string name="server_ip">http://10.0.2.2</string>-->
 </resources>

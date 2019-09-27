@@ -7,12 +7,17 @@ android {
         applicationId "com.example.bookkeeping"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.04"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath true
+            }
+        }
+        android.applicationVariants.all { variant ->
+            variant.outputs.all {
+                outputFileName = "Bookkeeping_V${versionName}.apk"
             }
         }
     }
@@ -40,6 +45,7 @@ dependencies {
     implementation 'javax.annotation:javax.annotation-api:1.2'
     implementation 'org.projectlombok:lombok:1.16.6'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.2.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

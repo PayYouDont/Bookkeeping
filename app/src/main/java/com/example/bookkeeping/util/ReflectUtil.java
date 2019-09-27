@@ -1,5 +1,7 @@
 package com.example.bookkeeping.util;
 
+import org.json.JSONObject;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,46 +42,7 @@ public class ReflectUtil {
     public static List<Field> getFields(Collection<?> collection) {
         return getFields(getGeneric(collection));
     }
-    /*public static String createTableByClass(Class clazz){
-        if (clazz==null){
-            return null;
-        }
-        StringBuilder builder = new StringBuilder ();
-        builder.append ("create table ");
-        String tableName = getTableName (clazz);
-        builder.append (tableName);
-        builder.append ("( ");
-        List<Field> fields = getFields (clazz);
-        fields.forEach (field -> {
-            Annotation IdAnnotation = field.getAnnotation (Id.class);
-            GeneratedValue GVAnnotation = field.getAnnotation (GeneratedValue.class);
-            String fieldName = field.getName ();
-            String fieldType = getLastStrByPattern(field.getType ().getTypeName ());
-            if(fieldType.equals ("double")){
-                fieldType = "real";
-            }else if (fieldType.equals ("boolean")){
-                fieldType = "blob";
-            }else if (fieldType.indexOf ("int")!=-1){
-                fieldType = "integer";
-            }else{
-                fieldType = "text";
-            }
-            if(IdAnnotation!=null){
-                builder.append (fieldName+" "+fieldType+" primary key");
-                if(GVAnnotation!=null){
-                    String strategy = GVAnnotation.strategy ().name ().toLowerCase ();
-                    builder.append (" "+strategy+"increment");
-                }
-                builder.append (", ");
-            }else{
-                builder.append (fieldName+" "+fieldType+", ");
-            }
-        });
-        builder.deleteCharAt (builder.lastIndexOf (","));
-        builder.append (")");
-        return builder.toString ();
-    }*/
-    public static String getTableName(Class clazz){
+   /* public static String getTableName(Class clazz){
         return getLastStrByPattern (clazz.getName ());
     }
     public static String getLastStrByPattern(String str,String pattern){
@@ -90,5 +53,5 @@ public class ReflectUtil {
     }
     public static String getLastStrByPattern(String str){
         return getLastStrByPattern (str,".");
-    }
+    }*/
 }

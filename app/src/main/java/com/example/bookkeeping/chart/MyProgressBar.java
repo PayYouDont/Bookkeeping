@@ -9,13 +9,13 @@ import android.util.AttributeSet;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.bookkeeping.R;
-
 import java.text.DecimalFormat;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class MyProgressBar extends ProgressBar {
     private String text;
     private Paint mPaint;
