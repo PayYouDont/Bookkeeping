@@ -1,20 +1,17 @@
-package com.example.bookkeeping.ui.home;
+package com.example.bookkeeping.ui;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
-import com.example.bookkeeping.util.HttpUtil;
 
 import org.litepal.util.LogUtil;
 
@@ -65,15 +62,15 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
         this.layoutRes = resLayout;
     }
 
-    public VersionDialog(Context context, int theme, int resLayout, AppVersion appVersion) {
-        super (context, theme);
+    public VersionDialog(Context context, int resLayout, AppVersion appVersion) {
+        super (context);
         this.context = context;
         this.layoutRes = resLayout;
         this.appVersion = appVersion;
     }
 
-    public VersionDialog(Context context, int theme, int resLayout, AppVersion appVersion, UpdateListener updateListener) {
-        super (context, theme);
+    public VersionDialog(Context context, int resLayout, AppVersion appVersion, UpdateListener updateListener) {
+        super (context);
         this.context = context;
         this.layoutRes = resLayout;
         this.appVersion = appVersion;
@@ -83,19 +80,33 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
-
         // 指定布局
         this.setContentView (layoutRes);
         TextView textView = findViewById (R.id.version_content);
         TextView titleView = findViewById (R.id.lay_view);
-        textView.setText ("更新内容：\n\n" + appVersion.getUpdateLog ());
-        titleView.setText ("发现新版本 " + appVersion.getVersionName ());
-        // 根据id在布局中找到控件对象
         bt_cancal = findViewById (R.id.cancal);
         bt_delect = findViewById (R.id.update);
-        // 为按钮绑定点击事件监听器
+        if(updateListener!=null){
+            textView.setText ("更新内容：\n\n" + appVersion.getUpdateLog ());
+            titleView.setText ("发现新版本 V" + appVersion.getVersionName ());
+            // 为按钮绑定点击事件监听器
+            bt_delect.setVisibility (View.VISIBLE);
+            bt_cancal.setText ("稍后");
+        }else {
+            textView.setText ("当前版本更新日志：\n\n" + appVersion.getUpdateLog ());
+            titleView.setText ("当前版本 V" + appVersion.getVersionName ());
+            bt_delect.setVisibility (View.GONE);
+            bt_cancal.setText ("确定");
+        }
         bt_cancal.setOnClickListener (this);
         bt_delect.setOnClickListener (this);
+        Window window = getWindow ();
+        WindowManager.LayoutParams p = window.getAttributes ();
+        WindowManager manager = getWindow ().getWindowManager ();
+        Point size = new Point ();
+        manager.getDefaultDisplay ().getSize (size);
+        p.width = size.x - 100;
+        window.setAttributes (p);
     }
 
     @Override

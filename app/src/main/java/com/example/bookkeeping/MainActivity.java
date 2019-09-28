@@ -40,25 +40,14 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity{
     public static Integer navBarHeight;
-    public static String serverIP;
-    private DownLoadService.DownloadBinder downloadBinder;
-    private ServiceConnection connection = new ServiceConnection () {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            downloadBinder = (DownLoadService.DownloadBinder) service;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_main);
         BottomNavigationView navView = findViewById (R.id.nav_view);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder (R.id.navigation_home, R.id.navigation_edit, R.id.navigation_history).build ();
+        //AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder (R.id.navigation_home, R.id.navigation_edit, R.id.navigation_history).build ();
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder (R.id.navigation_home, R.id.navigation_history,R.id.navigation_setting).build ();
         NavController navController = Navigation.findNavController (this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController (this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController (navView, navController);
@@ -67,18 +56,6 @@ public class MainActivity extends AppCompatActivity{
         //初始化支付方式表
         initPayMothedTable ();
         navBarHeight = getNavigationBarHeight (this);
-        serverIP = getString (R.string.server_ip);
-        checkVersion ();
-        Intent intent = new Intent (this, DownLoadService.class);
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O){
-            startForegroundService (intent);
-        }else {
-            startService(intent);
-        }
-        bindService (intent,connection,BIND_AUTO_CREATE);
-        if(ContextCompat.checkSelfPermission (MainActivity.this,Manifest.permission.WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions (MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
-        }
     }
 
     @Override
@@ -92,13 +69,6 @@ public class MainActivity extends AppCompatActivity{
                 break;
         }
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy ();
-        unbindService (connection);
-    }
-
     public static int getNavigationBarHeight(Activity mActivity) {
         Resources resources = mActivity.getResources();
         int resourceId = resources.getIdentifier("navigation_bar_height","dimen", "android");
@@ -148,44 +118,5 @@ public class MainActivity extends AppCompatActivity{
         map.put ("教育",R.drawable.ic_edit_education);
         map.put ("其他",R.drawable.ic_edit_other);
         return map;
-    }
-    private void checkVersion(){
-        AsyncTask asyncTask = new AsyncTask () {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                try {
-                    return HttpUtil.getVersion (serverIP+"/getVersion");
-                }catch (Exception e){
-                    LogUtil.e ("MainActivity.AsyncTask",e);
-                }
-                return null;
-            }
-        };
-        asyncTask.execute ();
-        try {
-            String data = asyncTask.get ().toString ();
-            JSONObject object = new JSONObject (data);
-            Integer versionCode = object.getInt ("versionCode");
-            int currentVersionCode = VersionUtil.getVersion (MainActivity.this);
-            if(versionCode>currentVersionCode){
-                AppVersion appVersion = new AppVersion ();
-                appVersion.setVersionCode (versionCode);
-                appVersion.setVersionName (object.getString ("versionName"));
-                appVersion.setUpdateLog (object.getString ("updateLog"));
-                appVersion.setForcedUpdate (object.getBoolean ("forcedUpdate"));
-                appVersion.setApkUrl (object.getString ("apkUrl"));
-                appVersion.setApkSize (object.getDouble ("apkSize"));
-                appVersion.setMd5 (object.getString ("md5"));
-                VersionUtil.updateApk (appVersion,this,() -> {
-                    String apkUrl = MainActivity.serverIP + "/downloadApk?apkUrl=" + appVersion.getApkUrl ();
-                    downloadBinder.setAppVersion (appVersion);
-                    downloadBinder.setContext (MainActivity.this);
-                    downloadBinder.startDownload (apkUrl);
-                });
-            }
-        }catch (Exception e){
-            LogUtil.e ("MainActivity",e);
-        }
-
     }
 }

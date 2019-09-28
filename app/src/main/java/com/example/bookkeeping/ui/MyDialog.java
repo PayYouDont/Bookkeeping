@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui.edit;
+package com.example.bookkeeping.ui;
 
 import android.app.Dialog;
 import android.content.Context;

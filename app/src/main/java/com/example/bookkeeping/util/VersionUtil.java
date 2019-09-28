@@ -5,10 +5,13 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+
 import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
-import com.example.bookkeeping.ui.home.VersionDialog;
+import com.example.bookkeeping.ui.VersionDialog;
 
 import org.litepal.util.LogUtil;
 
@@ -56,9 +59,9 @@ public class VersionUtil {
         }
         return "";
     }
-    public static void updateApk(AppVersion appVersion, MainActivity activity,VersionDialog.UpdateListener listener){
+    public static void updateApk(AppVersion appVersion, FragmentActivity activity, VersionDialog.UpdateListener listener){
         try {
-            VersionDialog versionDialog = new VersionDialog (activity, R.style.AppTheme,R.layout.dialog_update,appVersion,listener);
+            VersionDialog versionDialog = new VersionDialog (activity,R.layout.dialog_update,appVersion,listener);
             versionDialog.show ();
         }catch (Exception e){
             LogUtil.e ("VersionUtils",e);

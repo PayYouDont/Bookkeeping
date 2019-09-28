@@ -14,11 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.datepicker.DateFormatUtils;
 import com.example.bookkeeping.entity.Bill;
-import com.example.bookkeeping.ui.edit.EditFragment;
 import com.example.bookkeeping.util.StringUtil;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,6 +27,8 @@ public class BillAdapter extends RecyclerView.Adapter {
     private HashMap<String,Double> billMap;
     @Setter
     private OnremoveListnner onremoveListnner;
+    @Setter
+    private OnEditListenner onEditListenner;
 
     public BillAdapter(List<Bill> billList){
         this.billList = billList;
@@ -46,6 +45,9 @@ public class BillAdapter extends RecyclerView.Adapter {
     public interface OnremoveListnner{
         void  ondelete(int index,View removeBtn);
     }
+    public interface OnEditListenner{
+        void onEdit( Bill bill);
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -53,9 +55,10 @@ public class BillAdapter extends RecyclerView.Adapter {
         ViewHolder holder = new ViewHolder (view);
         holder.billView.setOnClickListener (v -> {
             Bill bill = billList.get (holder.getAdapterPosition ());
-            EditFragment.bill = bill;
-            BottomNavigationView navigation = view.getRootView ().findViewById (R.id.nav_view);
-            navigation.setSelectedItemId(navigation.getMenu().getItem(1).getItemId());
+            //EditFragment.bill = bill;
+            if(onEditListenner!=null){
+                onEditListenner.onEdit (bill);
+            }
         });
         holder.billView.setOnLongClickListener (v -> {
             if(isRemoveStateBtn!=null&&isRemoveStateBtn.getVisibility ()!=View.GONE){

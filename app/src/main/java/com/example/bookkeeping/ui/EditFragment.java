@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui.edit;
+package com.example.bookkeeping.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -28,20 +28,18 @@ import org.litepal.LitePal;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Setter;
-
 public class EditFragment extends Fragment implements View.OnClickListener{
     private TextView mTvSelectedTime,dateText, consumeTypeSpinner;
     private CustomDatePicker mTimerPicker;
     private View root;
     //消费类型下拉控件,支付方式下拉控件
     private Spinner payMethodSpinner;
-    @Setter
-    public static Bill bill;
     //金额输入框
     private EditText consumeText,remarkText;
     private ImageView consumeImageView;
     private Bill billInstance;
+    private List<Expenditure> expenditures;
+    private List<PayMethod> payMethods;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_edit, container, false);
         root.findViewById(R.id.ll_time).setOnClickListener(this);
@@ -55,22 +53,38 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         consumeText = root.findViewById (R.id.consume_count);
         dateText = root.findViewById (R.id.tv_selected_time);
         remarkText = root.findViewById (R.id.remark);
-        billInstance = new Bill ();
-        if(bill!=null){
-            billInstance.setId (bill.getId ());
-            billInstance.setRemark (bill.getRemark ());
-            billInstance.setConsumptionTime (bill.getConsumptionTime ());
-            billInstance.setPayMethodId (bill.getPayMethodId ());
-            billInstance.setExpenditureId (bill.getExpenditureId ());
-            billInstance.setAmount (bill.getAmount ());
+        expenditures = LitePal.findAll (Expenditure.class);
+        payMethods = LitePal.findAll (PayMethod.class);
+        initData();
+        return root;
+    }
+
+    public EditFragment(Bill billInstance) {
+        this.billInstance = billInstance;
+    }
+    //初始化数据
+    private void initData(){
+        if(billInstance.getAmount ()!=null){
             consumeText.setText (billInstance.getAmount ().toString ());
+        }
+        if(billInstance.getConsumptionTime ()!=null){
             dateText.setText (billInstance.getConsumptionTime ());
+        }
+        if(billInstance.getRemark ()!=null){
             remarkText.setText (billInstance.getRemark ());
+        }
+        if(billInstance.getConsumptionTime ()==null){
+            String now = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
+            billInstance.setConsumptionTime (now);
+        }
+        if(billInstance.getExpenditureId ()==null){
+            billInstance.setExpenditureId (expenditures.get (0).getId ());
+        }
+        if(billInstance.getPayMethodId ()==null){
+            billInstance.setPayMethodId (payMethods.get (0).getId ());
         }
         initTimerPicker();
         initSpinner ();
-        bill = null;
-        return root;
     }
     @Override
     public void onClick(View v) {
@@ -86,10 +100,6 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         String beginTime = "1990-01-01 00:00";
         //String endTime = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
         String endTime = "2099-12-31 23:59";
-        String now = DateFormatUtils.long2Str(System.currentTimeMillis(), true);
-        if(billInstance.getConsumptionTime ()==null){
-            billInstance.setConsumptionTime (now);
-        }
         mTvSelectedTime.setText(billInstance.getConsumptionTime ());
         // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
         mTimerPicker = new CustomDatePicker (root.getContext (),
@@ -128,13 +138,10 @@ public class EditFragment extends Fragment implements View.OnClickListener{
     }
     private void initSpinner(){
         List<Expenditure> expenditures = LitePal.findAll (Expenditure.class);
-        if(billInstance.getExpenditureId ()==null){
-           billInstance.setExpenditureId (expenditures.get (0).getId ());
-        }
         consumeImageView.setImageResource (billInstance.getExpenditure ().getImageId ());
         consumeTypeSpinner.setText (billInstance.getExpenditure ().getName ());
         consumeTypeSpinner.setOnClickListener (v -> {
-            MyDialog dialog = new MyDialog (root.getContext (),expenditures,position -> {
+            MyDialog dialog = new MyDialog (root.getContext (),expenditures, position -> {
                 Expenditure expenditure = expenditures.get (position);
                 consumeImageView.setImageResource (expenditure.getImageId ());
                 consumeTypeSpinner.setText (expenditure.getName ());
@@ -144,9 +151,6 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         });
         int index = 0;
         List<PayMethod> payMethods = LitePal.findAll (PayMethod.class);
-        if(billInstance.getPayMethodId ()==null){
-            billInstance.setPayMethodId (payMethods.get (0).getId ());
-        }
         List<SpinnerData> data = new ArrayList<> ();
         for(int i=0;i<payMethods.size ();i++){
             PayMethod payMethod = payMethods.get (i);

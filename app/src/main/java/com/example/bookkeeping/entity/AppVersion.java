@@ -1,6 +1,9 @@
 package com.example.bookkeeping.entity;
 
+import org.litepal.crud.LitePalSupport;
+
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @ClassName AppVersion
@@ -9,7 +12,9 @@ import lombok.Data;
  * @DATE 2019/9/20 17:01
  **/
 @Data
-public class AppVersion {
+@EqualsAndHashCode(callSuper = false)
+public class AppVersion extends LitePalSupport {
+    private Integer id = 1;
     private Integer versionCode;
     private String versionName;
     private String updateLog;

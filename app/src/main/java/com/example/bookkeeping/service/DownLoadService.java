@@ -22,6 +22,7 @@ import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.DownloadListener;
+import com.example.bookkeeping.ui.SettingFragment;
 
 import java.io.File;
 
@@ -47,6 +48,7 @@ public class DownLoadService extends Service {
             String directory = Environment.getExternalStoragePublicDirectory (Environment.DIRECTORY_DOWNLOADS).getPath ()+File.separator;
             String apkPath = directory + fileName;
             installApk (mBinder.context,apkPath);
+            mBinder.appVersion.saveOrUpdate ("id=1");
         }
 
         @Override
@@ -77,7 +79,7 @@ public class DownLoadService extends Service {
         return (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
     }
     private Notification getNotification(String title,int progress) {
-        Intent intent = new Intent (this, MainActivity.class);
+        Intent intent = new Intent (this, SettingFragment.class);
         PendingIntent pendingIntent = PendingIntent.getActivity (this,0,intent,0);
         Notification.Builder builder = new Notification.Builder (this.getApplicationContext())
                 .setContentIntent (pendingIntent)
@@ -124,7 +126,6 @@ public class DownLoadService extends Service {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
         }
         context.startActivity(intent);
-
     }
     private DownloadBinder mBinder = new DownloadBinder ();
     @Override

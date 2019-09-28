@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui.home;
+package com.example.bookkeeping.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +11,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.chart.MyProgressBar;
@@ -22,6 +24,7 @@ import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.ProgressData;
 import com.example.bookkeeping.util.StringUtil;
 import com.github.mikephil.charting.charts.PieChart;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.litepal.LitePal;
 
@@ -37,6 +40,7 @@ public class HomeFragment extends BaseFragment {
     private MyProgressBar progressBar;
     private EditText startDateText,endDateText,expectedDateText,totalText;
     private CustomDatePicker startTimerPicker,endTimerPicker,expectedPicker;
+    private FloatingActionButton billAddBtn;
     private RadioGroup radioGroup;
     private Double currentAmount = 0d;
     private List<Integer> groupIds;
@@ -72,6 +76,12 @@ public class HomeFragment extends BaseFragment {
         }else{
             radioGroup.check (R.id.home_radio_customize);
         }
+        billAddBtn = root.findViewById (R.id.bill_add_btn);
+        billAddBtn.setOnClickListener (v -> {
+            FragmentTransaction transaction = getFragmentManager ().beginTransaction ();
+            Fragment fragment = new EditFragment (new Bill ());
+            transaction.replace (R.id.nav_host_fragment,fragment).commit ();
+        });
         setRootHeight (root);
         return root;
     }
@@ -221,6 +231,7 @@ public class HomeFragment extends BaseFragment {
             totalText.setText (total.toString ());
         }
     }
+
     private boolean checkDateIsOut(String expectedDate,String endDate){
         return checkDateIsOut(DateFormatUtils.parse (expectedDate),DateFormatUtils.parse (endDate));
     }

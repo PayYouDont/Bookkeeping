@@ -1,28 +1,21 @@
-package com.example.bookkeeping.ui.history;
+package com.example.bookkeeping.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.adapter.BillAdapter;
-import com.example.bookkeeping.adapter.ConsumeTypeAdapter;
 import com.example.bookkeeping.entity.BaseFragment;
 import com.example.bookkeeping.entity.Bill;
-import com.example.bookkeeping.entity.Expenditure;
-import com.example.bookkeeping.ui.edit.EditFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.bookkeeping.ui.EditFragment;
 
 import org.litepal.LitePal;
 
@@ -47,13 +40,13 @@ public class HistoryFragment extends BaseFragment {
                 removeBtn.setVisibility (View.GONE);
             });
         });
+        adapter.setOnEditListenner (bill -> {
+            FragmentTransaction transaction = getFragmentManager ().beginTransaction ();
+            Fragment fragment = new EditFragment (bill);
+            transaction.replace (R.id.nav_host_fragment,fragment).commit ();
+        });
         recyclerView.setAdapter (adapter);
         setRootHeight (root);
         return root;
     }
-   /* public static void toEditFragement(Fragment fragment){
-        FragmentTransaction transaction = fragmentManager.beginTransaction ();
-        transaction.replace (R.id.nav_host_fragment,fragment).commit ();
-        MainActivity.navView.setSelectedItemId(MainActivity.navView.getMenu().getItem(1).getItemId());
-    }*/
 }
