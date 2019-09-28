@@ -6,7 +6,7 @@
     <LinearLayout
             android:id="@+id/bill_item_date_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="41dp"
             android:layout_marginLeft="20dp"
             android:background="@drawable/border_bottom">
         <TextView
@@ -14,26 +14,33 @@
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
+                android:background="@color/background_color"
                 android:text="9月2日"
                 android:gravity="center_vertical"
                 />
         <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:gravity="center_vertical"
+                android:background="@color/background_color"
+                android:textColor="@color/select_title_text"
                 android:text="共计:"/>
         <TextView
                 android:id="@+id/bill_item_day_total"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:layout_marginRight="10dp"
+                android:background="@color/background_color"
+                android:textColor="@color/select_title_text"
                 android:text="0"/>
         <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:gravity="center_vertical"
                 android:layout_marginRight="20dp"
+                android:background="@color/background_color"
+                android:textColor="@color/select_title_text"
                 android:text="元"/>
     </LinearLayout>
     <LinearLayout
@@ -41,7 +48,7 @@
             android:layout_height="50dp"
             android:gravity="center"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/border_bottom">
+            android:background="@color/background_color">
         <ImageView
                 android:id="@+id/bill_item_expenditureImg"
                 android:layout_width="@dimen/edit_consume_type_img_width"
@@ -49,10 +56,11 @@
                 android:src="@drawable/ic_edit_consume"/>
         <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="49dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layout_marginRight="20dp"
+                android:background="@color/background_color"
                 android:orientation="vertical">
             <LinearLayout
                     android:layout_width="match_parent"
@@ -65,11 +73,13 @@
                         android:ellipsize="end"
                         android:maxEms="7"
                         android:singleLine="true"
+                        android:background="@color/background_color"
                         android:text="消费"/>
                 <TextView
                         android:id="@+id/bill_item_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:background="@color/background_color"
                         android:text="1.00元"/>
             </LinearLayout>
             <LinearLayout
@@ -80,11 +90,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="@color/background_color"
                         android:text="支付宝"/>
                 <TextView
                         android:id="@+id/bill_item_consumptionTime"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:background="@color/background_color"
                         android:text="周一 18:37"/>
             </LinearLayout>
         </LinearLayout>
@@ -97,4 +109,9 @@
                 android:visibility="gone"
                 android:text="删除"/>
     </LinearLayout>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/border_bottom"/>
 </LinearLayout>

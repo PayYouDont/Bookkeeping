@@ -1,133 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:background="@color/background_color"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:animationCache="true">
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp">
+            android:orientation="vertical">
+        <include layout="@layout/home_header"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_bottom">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="快速选择:" />
-
-            <RadioGroup
-                    android:id="@+id/home_radio_group"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                <RadioButton
-                        android:id="@+id/home_radio_year"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:text="前一年" />
-
-                <RadioButton
-                        android:id="@+id/home_radio_month"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="前一个月" />
-
-                <RadioButton
-                        android:id="@+id/home_radio_day"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="前一天" />
-
-                <RadioButton
-                        android:id="@+id/home_radio_customize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="自定义" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_bottom">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="所选时间段:" />
-
-            <EditText
-                    android:id="@+id/home_start_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:focusable="false"
-                    android:hint="开始时间" />
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="到" />
-
-            <EditText
-                    android:id="@+id/home_end_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:focusable="false"
-                    android:hint="结束时间" />
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_bottom"
+                android:background="@color/background_color"
                 android:orientation="vertical">
-
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="进度设置：" />
-
-                <EditText
-                        android:id="@+id/home_total_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:hint="预期金额"
-                        android:inputType="numberDecimal" />
-
-                <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="预期时间:" />
-
-                <EditText
-                        android:id="@+id/home_expected_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:focusable="false" />
-            </LinearLayout>
-
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -160,7 +49,6 @@
                         android:layout_height="wrap_content"
                         android:text=" 元" />
             </LinearLayout>
-
             <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -195,7 +83,6 @@
                         android:focusable="false"
                         android:text=" 元" />
             </LinearLayout>
-            /
 
             <com.example.bookkeeping.chart.MyProgressBar
                     android:id="@+id/home_progressBar"
@@ -206,19 +93,27 @@
                     android:max="100"
                     android:progress="0" />
         </LinearLayout>
-
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/border_bottom"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@drawable/border_bottom">
-
+                android:orientation="vertical">
             <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/home_chart_pie"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@color/background_color" />
         </LinearLayout>
-
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/border_bottom"/>
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -228,6 +123,8 @@
                     android:id="@+id/home_chart_bar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
                     android:visibility="gone" />
         </LinearLayout>
         <com.google.android.material.floatingactionbutton.FloatingActionButton

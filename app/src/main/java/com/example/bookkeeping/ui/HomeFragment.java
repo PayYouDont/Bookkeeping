@@ -1,11 +1,15 @@
 package com.example.bookkeeping.ui;
 
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,7 @@ public class HomeFragment extends BaseFragment {
     private MyProgressBar progressBar;
     private EditText startDateText,endDateText,expectedDateText,totalText;
     private CustomDatePicker startTimerPicker,endTimerPicker,expectedPicker;
+    private LinearLayout hideLayout,slidLayout;
     private FloatingActionButton billAddBtn;
     private RadioGroup radioGroup;
     private Double currentAmount = 0d;
@@ -82,6 +87,9 @@ public class HomeFragment extends BaseFragment {
             Fragment fragment = new EditFragment (new Bill ());
             transaction.replace (R.id.nav_host_fragment,fragment).commit ();
         });
+        hideLayout = root.findViewById (R.id.hide_layout);
+        slidLayout = root.findViewById (R.id.slid_layout);
+        slidLayout.setOnTouchListener ((v, event) -> slidding (event));
         setRootHeight (root);
         return root;
     }
@@ -237,5 +245,27 @@ public class HomeFragment extends BaseFragment {
     }
     private boolean checkDateIsOut(Date expectedDate,Date endDate){
         return expectedDate.getTime ()-endDate.getTime ()>0;
+    }
+    float mPosY=0,mCurPosY=0;
+    private boolean slidding(MotionEvent event){
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mPosY = event.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                mCurPosY = event.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                if(mCurPosY - mPosY > 0&& (Math.abs(mCurPosY - mPosY) > 25)) {
+                    //向下滑
+                    hideLayout.setVisibility (View.VISIBLE);
+                    slidLayout.getChildAt (0).setRotation (180);
+                }else if(mCurPosY - mPosY < 0&& (Math.abs(mCurPosY - mPosY) > 25)){
+                    hideLayout.setVisibility (View.GONE);
+                    slidLayout.getChildAt (0).setRotation (0);
+                }
+                break;
+        }
+        return true;
     }
 }
