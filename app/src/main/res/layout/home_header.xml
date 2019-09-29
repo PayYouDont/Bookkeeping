@@ -30,7 +30,6 @@
                         android:id="@+id/home_radio_year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:text="前一年" />
 
                 <RadioButton

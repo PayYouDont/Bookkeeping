@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         package="com.example.bookkeeping">
-
     <!-- android:icon="@mipmap/ic_launcher" -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -20,18 +19,14 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true">
         <provider
-                android:authorities="com.example.bookkeeping.fileprovider"
                 android:name="androidx.core.content.FileProvider"
-                android:grantUriPermissions="true"
-                android:exported="false">
+                android:authorities="com.example.bookkeeping.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
                     android:resource="@xml/file_paths" />
         </provider>
-        <service
-                android:name=".service.DownLoadService"
-                android:enabled="true"
-                android:exported="true" />
         <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name">

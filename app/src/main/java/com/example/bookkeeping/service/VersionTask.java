@@ -4,8 +4,8 @@ import android.os.AsyncTask;
 
 import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.util.HttpUtil;
+import com.example.bookkeeping.util.ReflectUtil;
 
-import org.json.JSONObject;
 import org.litepal.util.LogUtil;
 
 import java.io.IOException;
@@ -34,22 +34,7 @@ public class VersionTask extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String versionJson) {
-        AppVersion appVersion = null;
-        if(versionJson!=null){
-            try {
-                JSONObject object = new JSONObject (versionJson);
-                appVersion = new AppVersion ();
-                appVersion.setVersionCode (object.getInt ("versionCode"));
-                appVersion.setVersionName (object.getString ("versionName"));
-                appVersion.setUpdateLog (object.getString ("updateLog"));
-                appVersion.setForcedUpdate (object.getBoolean ("forcedUpdate"));
-                appVersion.setApkUrl (object.getString ("apkUrl"));
-                appVersion.setApkSize (object.getDouble ("apkSize"));
-                appVersion.setMd5 (object.getString ("md5"));
-            }catch (Exception e){
-                LogUtil.e ("VersionTask",e);
-            }
-        }
+        AppVersion appVersion = ReflectUtil.parseToAppversion (versionJson);
         if(onVersionListener!=null){
             onVersionListener.updateVersion (appVersion);
         }

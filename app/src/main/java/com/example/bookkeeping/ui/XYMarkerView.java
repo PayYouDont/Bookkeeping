@@ -1,4 +1,4 @@
-package com.example.bookkeeping.entity;
+package com.example.bookkeeping.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

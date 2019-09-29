@@ -1,38 +1,24 @@
 package com.example.bookkeeping;
 
-import android.Manifest;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.Expenditure;
 import com.example.bookkeeping.entity.PayMethod;
-import com.example.bookkeeping.service.DownLoadService;
-import com.example.bookkeeping.util.HttpUtil;
-import com.example.bookkeeping.util.VersionUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import org.json.JSONObject;
 import org.litepal.LitePal;
-import org.litepal.util.LogUtil;
 
 import java.util.LinkedHashMap;
 import java.util.List;

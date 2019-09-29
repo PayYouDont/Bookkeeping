@@ -26,12 +26,12 @@ import lombok.Setter;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class MyDialog extends Dialog{
+public class ExpenditureDialog extends Dialog{
     private List<Expenditure> expenditureList;
     private TextView cancelTxt;
     @Setter
     private ConsumeTypeAdapter.OnSelectItemListener onSelectItemListener;
-    public MyDialog(@NonNull Context context, List<Expenditure> expenditureList, ConsumeTypeAdapter.OnSelectItemListener onSelectItemListener) {
+    public ExpenditureDialog(@NonNull Context context, List<Expenditure> expenditureList, ConsumeTypeAdapter.OnSelectItemListener onSelectItemListener) {
         super (context);
         this.expenditureList = expenditureList;
         this.onSelectItemListener = onSelectItemListener;

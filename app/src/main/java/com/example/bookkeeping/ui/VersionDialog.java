@@ -1,3 +1,4 @@
+/*
 package com.example.bookkeeping.ui;
 
 import android.app.Dialog;
@@ -15,30 +16,40 @@ import com.example.bookkeeping.entity.AppVersion;
 
 import org.litepal.util.LogUtil;
 
+*/
 /**
  * 自定义dialog
- */
+ *//*
+
 public class VersionDialog extends Dialog implements View.OnClickListener {
 
-    /**
+    */
+/**
      * 布局文件
-     **/
+     **//*
+
     int layoutRes;
 
-    /**
+    */
+/**
      * 上下文对象
-     **/
+     **//*
+
     Context context;
 
 
-    /**
+    */
+/**
      * 取消按钮
-     **/
+     **//*
+
     private Button bt_cancal;
 
-    /**
+    */
+/**
      * 更新按钮
-     **/
+     **//*
+
     private Button bt_delect;
     private AppVersion appVersion;
     private UpdateListener updateListener;
@@ -50,12 +61,14 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
         this.context = context;
     }
 
-    /**
+    */
+/**
      * 自定义布局的构造方法
      *
      * @param context
      * @param resLayout
-     */
+     *//*
+
     public VersionDialog(Context context, int resLayout) {
         super (context);
         this.context = context;
@@ -127,10 +140,12 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
                 break;
         }
     }
-    /**
+    */
+/**
      * 操作  版本更新
      *
-     */
+     *//*
+
     private void optUpdateApk( ) {
         try {
             //HttpUtil.downloadApk(appVersion);
@@ -143,3 +158,4 @@ public class VersionDialog extends Dialog implements View.OnClickListener {
 
 
 
+*/

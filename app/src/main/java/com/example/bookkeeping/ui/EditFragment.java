@@ -141,7 +141,7 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         consumeImageView.setImageResource (billInstance.getExpenditure ().getImageId ());
         consumeTypeSpinner.setText (billInstance.getExpenditure ().getName ());
         consumeTypeSpinner.setOnClickListener (v -> {
-            MyDialog dialog = new MyDialog (root.getContext (),expenditures, position -> {
+            ExpenditureDialog dialog = new ExpenditureDialog (root.getContext (),expenditures, position -> {
                 Expenditure expenditure = expenditures.get (position);
                 consumeImageView.setImageResource (expenditure.getImageId ());
                 consumeTypeSpinner.setText (expenditure.getName ());

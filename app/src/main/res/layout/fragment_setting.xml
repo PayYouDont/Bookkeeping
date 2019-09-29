@@ -55,6 +55,7 @@
                             android:layout_height="10dp"
                             android:layout_gravity="center"
                             android:layout_marginRight="5dp"
+                            android:visibility="gone"
                             android:background="@drawable/border_circle"/>
                     <TextView
                             android:id="@+id/setting_update_msg"
@@ -62,7 +63,7 @@
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:textColor="@color/select_title_text"
-                            android:text="发现新版本"/>
+                            android:text="已是最新版本"/>
                 </LinearLayout>
                 <LinearLayout
                         android:id="@+id/setting_log_layout"

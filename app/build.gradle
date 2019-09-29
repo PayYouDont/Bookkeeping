@@ -8,7 +8,7 @@ android {
         minSdkVersion 24
         targetSdkVersion 28
         versionCode 5
-        versionName "1.1"
+        versionName "1.10"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -46,6 +46,8 @@ dependencies {
     implementation 'org.projectlombok:lombok:1.16.6'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
+    implementation 'com.github.Ajian-studio:GADownloading:v1.0.2'
+    implementation 'com.github.czy1121:update:1.1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
