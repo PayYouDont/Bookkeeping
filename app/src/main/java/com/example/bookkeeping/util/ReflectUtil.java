@@ -71,6 +71,7 @@ public class ReflectUtil {
         UpdateInfo updateInfo = null;
         if(appVersion!=null){
             updateInfo = new UpdateInfo ();
+            updateInfo.isIgnorable = false;
             updateInfo.isForce = appVersion.isForcedUpdate ();
             updateInfo.versionCode = appVersion.getVersionCode ();
             updateInfo.versionName = appVersion.getVersionName ();

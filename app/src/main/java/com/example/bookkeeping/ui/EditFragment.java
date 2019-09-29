@@ -1,6 +1,8 @@
 package com.example.bookkeeping.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +42,10 @@ public class EditFragment extends Fragment implements View.OnClickListener{
     private Bill billInstance;
     private List<Expenditure> expenditures;
     private List<PayMethod> payMethods;
+    public static boolean isCreated = false;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_edit, container, false);
+        root.setTag ("fragmentEdit");
         root.findViewById(R.id.ll_time).setOnClickListener(this);
         //消费类型下拉
         consumeTypeSpinner = root.findViewById (R.id.consume_type_spinner);
@@ -56,7 +60,14 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         expenditures = LitePal.findAll (Expenditure.class);
         payMethods = LitePal.findAll (PayMethod.class);
         initData();
+        isCreated = true;
         return root;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView ();
+        isCreated = false;
     }
 
     public EditFragment(Bill billInstance) {
@@ -170,4 +181,5 @@ public class EditFragment extends Fragment implements View.OnClickListener{
         payMethodSpinner.setAdapter (payMethodAdapter);
         payMethodSpinner.setSelection (index);
     }
+
 }

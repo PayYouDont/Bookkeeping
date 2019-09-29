@@ -2,7 +2,8 @@
     <!-- 连框颜色值 -->
     <item>
         <shape>
-            <solid android:color="#2E2828" />
+            <!--<solid android:color="#2E2828" />-->
+            <solid android:color="@color/select_title_text" />
         </shape>
     </item>
     <!-- 主体背景颜色值 -->

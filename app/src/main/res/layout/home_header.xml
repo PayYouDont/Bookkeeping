@@ -8,7 +8,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,24 +30,28 @@
                         android:id="@+id/home_radio_year"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/select_title_text"
                         android:text="前一年" />
 
                 <RadioButton
                         android:id="@+id/home_radio_month"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/select_title_text"
                         android:text="前一个月" />
 
                 <RadioButton
                         android:id="@+id/home_radio_day"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/select_title_text"
                         android:text="前一天" />
 
                 <RadioButton
                         android:id="@+id/home_radio_customize"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/select_title_text"
                         android:text="自定义" />
             </RadioGroup>
         </LinearLayout>
@@ -68,6 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
+                    android:textColor="@color/select_title_text"
                     android:hint="开始时间" />
 
             <TextView
@@ -82,6 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:focusable="false"
+                    android:textColor="@color/select_title_text"
                     android:hint="结束时间" />
         </LinearLayout>
         <LinearLayout
@@ -99,6 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="预期金额"
+                    android:textColor="@color/select_title_text"
                     android:inputType="numberDecimal" />
 
             <TextView
@@ -112,6 +119,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:textColor="@color/select_title_text"
                     android:focusable="false" />
         </LinearLayout>
     </LinearLayout>

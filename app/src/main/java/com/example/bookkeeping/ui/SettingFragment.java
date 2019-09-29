@@ -14,13 +14,13 @@ import androidx.annotation.NonNull;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.BaseFragment;
+import com.example.bookkeeping.service.DownLoadDialogListener;
 import com.example.bookkeeping.service.VersionTask;
 import com.example.bookkeeping.util.ReflectUtil;
 import com.example.bookkeeping.util.VersionUtil;
 
 import org.litepal.LitePal;
 
-import ezy.boost.update.OnDownloadListener;
 import ezy.boost.update.UpdateInfo;
 import ezy.boost.update.UpdateManager;
 
@@ -31,7 +31,7 @@ public class SettingFragment extends BaseFragment {
     private ImageView updateCircleImg;
     private TextView updateMsg;
     private boolean hasNewVersion;
-    private DownLoadDialog downLoadDialog;
+    private DownLoadDialogListener downLoadDialogListener;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_setting, container, false);
         serverIP = getString (R.string.server_ip);
@@ -42,7 +42,7 @@ public class SettingFragment extends BaseFragment {
         feedbackLayout = root.findViewById (R.id.setting_feedback_layout);
         updateCircleImg = root.findViewById (R.id.setting_update_circle_img);
         updateMsg = root.findViewById (R.id.setting_update_msg);
-        downLoadDialog = new DownLoadDialog (getContext ());
+        downLoadDialogListener = new DownLoadDialogListener (getContext ());
         setRootHeight (root);
         new VersionTask (appVersion -> updateView (appVersion)).execute (serverIP + "/getVersion");
         return root;
@@ -58,7 +58,7 @@ public class SettingFragment extends BaseFragment {
             info.url = apkUrl;
             info.hasUpdate = info.versionCode>VersionUtil.getVersion (getContext ());
             return info;
-        }).setOnDownloadListener (downLoadDialog).check ();
+        }).setOnDownloadListener (downLoadDialogListener).check ();
     }
     private void updateView(AppVersion appVersion){
         hasNewVersion = appVersion.getVersionCode ()>VersionUtil.getVersion (getContext ());

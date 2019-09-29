@@ -5,17 +5,25 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.Expenditure;
 import com.example.bookkeeping.entity.PayMethod;
+import com.example.bookkeeping.ui.EditFragment;
+import com.example.bookkeeping.ui.HistoryFragment;
+import com.example.bookkeeping.ui.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.litepal.LitePal;
@@ -26,13 +34,12 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity{
     public static Integer navBarHeight;
-
+    BottomNavigationView navView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
         setContentView (R.layout.activity_main);
-        BottomNavigationView navView = findViewById (R.id.nav_view);
-        //AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder (R.id.navigation_home, R.id.navigation_edit, R.id.navigation_history).build ();
+        navView = findViewById (R.id.nav_view);
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder (R.id.navigation_home, R.id.navigation_history,R.id.navigation_setting).build ();
         NavController navController = Navigation.findNavController (this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController (this, navController, appBarConfiguration);
@@ -45,15 +52,20 @@ public class MainActivity extends AppCompatActivity{
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode){
-            case 1:
-                if(grantResults.length>0&&grantResults[0] != PackageManager.PERMISSION_GRANTED){
-                    Toast.makeText (this,"拒绝权限将无法使用程序",Toast.LENGTH_SHORT).show ();
-                    finish ();
-                }
-                break;
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK&&EditFragment.isCreated) {
+            Fragment fragment = null;
+            FragmentTransaction transaction = getSupportFragmentManager ().beginTransaction ();
+            if(navView.getSelectedItemId ()==R.id.navigation_home){
+                fragment = new HomeFragment ();
+            }else if(navView.getSelectedItemId ()==R.id.navigation_history){
+                fragment = new HistoryFragment ();
+            }
+            transaction.replace (R.id.nav_host_fragment,fragment).commit ();
+            EditFragment.isCreated = false;
+            return true;
         }
+        return super.onKeyDown (keyCode, event);
     }
     public static int getNavigationBarHeight(Activity mActivity) {
         Resources resources = mActivity.getResources();

@@ -7,8 +7,8 @@ android {
         applicationId "com.example.bookkeeping"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 5
-        versionName "1.10"
+        versionCode 7
+        versionName "1.12"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {

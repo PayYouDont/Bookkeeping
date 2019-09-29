@@ -1,4 +1,4 @@
-package com.example.bookkeeping.ui;
+package com.example.bookkeeping.service;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -8,16 +8,16 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.example.bookkeeping.R;
+import com.example.bookkeeping.ui.GADownloadingView;
 
 import ezy.boost.update.OnDownloadListener;
 import lombok.Getter;
 
-public class DownLoadDialog extends Dialog implements OnDownloadListener {
+public class DownLoadDialogListener extends Dialog implements OnDownloadListener {
     @Getter
     private GADownloadingView downloadingView;
-    public DownLoadDialog(@NonNull Context context) {
+    public DownLoadDialogListener(@NonNull Context context) {
         super (context);
-
     }
 
     @Override
@@ -30,13 +30,13 @@ public class DownLoadDialog extends Dialog implements OnDownloadListener {
     }
 
     @Override
-    public void onStart() {
-        downloadingView.updateProgress (0);
-    }
+    public void onStart() {}
 
     @Override
     public void onProgress(int progress) {
-        show ();
+        if(!isShowing ()){
+            show ();
+        }
         if(downloadingView!=null){
             downloadingView.updateProgress (progress);
         }
