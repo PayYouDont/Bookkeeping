@@ -19,7 +19,8 @@ public class AppVersion extends LitePalSupport {
     private String versionName;
     private String updateLog;
     private boolean forcedUpdate;
+    private boolean ignorable;
     private String apkUrl;
-    private Double apkSize;
+    private Long apkSize;
     private String md5;
 }

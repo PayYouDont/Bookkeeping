@@ -22,7 +22,7 @@ public class VersionLogDialog extends AlertDialog{
         tv.setTextSize(14);
         tv.setMaxHeight((int) (250 * density));
         setView(tv, (int) (25 * density), (int) (15 * density), (int) (25 * density), 0);
-        String content = String.format("当前版本：%1$s\n版本大小：%2$s\n\n更新内容\n%3$s", appVersion.getVersionName (), appVersion.getApkSize (), appVersion.getUpdateLog ());
+        String content = String.format("当前版本：%1$s\n版本大小：%2$s M\n\n更新内容\n%3$s", appVersion.getVersionName (), appVersion.getApkSize (), appVersion.getUpdateLog ());
         tv.setText(content);
         setButton(DialogInterface.BUTTON_POSITIVE, "确定",(dialog, which) -> dismiss ());
     }

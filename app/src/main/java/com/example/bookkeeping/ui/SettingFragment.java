@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.BaseFragment;
@@ -26,37 +27,34 @@ import ezy.boost.update.UpdateManager;
 
 public class SettingFragment extends BaseFragment {
     private View root;
-    public String serverIP;
     private LinearLayout updateLayout,logLayout,descLayout,feedbackLayout;
     private ImageView updateCircleImg;
     private TextView updateMsg;
     private boolean hasNewVersion;
-    private DownLoadDialogListener downLoadDialogListener;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_setting, container, false);
-        serverIP = getString (R.string.server_ip);
         updateLayout = root.findViewById (R.id.setting_update_layout);
-        updateLayout.setOnClickListener (v -> checkVersion());
+        updateLayout.setOnClickListener (v -> {
+            if (hasNewVersion) {
+                checkVersion(new DownLoadDialogListener (getContext ()));
+            }
+        });
         logLayout = root.findViewById (R.id.setting_log_layout);
         descLayout = root.findViewById (R.id.setting_desc_layout);
         feedbackLayout = root.findViewById (R.id.setting_feedback_layout);
         updateCircleImg = root.findViewById (R.id.setting_update_circle_img);
         updateMsg = root.findViewById (R.id.setting_update_msg);
-        downLoadDialogListener = new DownLoadDialogListener (getContext ());
         setRootHeight (root);
-        new VersionTask (appVersion -> updateView (appVersion)).execute (serverIP + "/getVersion");
+        new VersionTask (appVersion -> updateView (appVersion)).execute (MainActivity.serverIP + "/getVersion");
         return root;
     }
-    private void checkVersion() {
-        if(!hasNewVersion){
-            return;
-        }
-        String mCheckUrl = serverIP + "/getVersion";
-        UpdateManager.create (getContext ()).setUrl (mCheckUrl).setParser (source -> {
+    public static void checkVersion(DownLoadDialogListener downLoadDialogListener) {
+        String mCheckUrl = MainActivity.serverIP + "/getVersion";
+        UpdateManager.create (downLoadDialogListener.getContext ()).setUrl (mCheckUrl).setParser (source -> {
             UpdateInfo info = ReflectUtil.parseToUpdateInfo (source);
-            String apkUrl = serverIP + "/downloadApk?apkUrl=" + info.url;
+            String apkUrl = MainActivity.serverIP + "/downloadApk?apkUrl=" + info.url;
             info.url = apkUrl;
-            info.hasUpdate = info.versionCode>VersionUtil.getVersion (getContext ());
+            info.hasUpdate = info.versionCode>VersionUtil.getVersion (downLoadDialogListener.getContext ());
             return info;
         }).setOnDownloadListener (downLoadDialogListener).check ();
     }

@@ -53,12 +53,13 @@ public class ReflectUtil {
             try {
                 JSONObject object = new JSONObject (versionJson);
                 appVersion = new AppVersion ();
+                appVersion.setIgnorable (object.getBoolean ("ignorable"));
                 appVersion.setVersionCode (object.getInt ("versionCode"));
                 appVersion.setVersionName (object.getString ("versionName"));
                 appVersion.setUpdateLog (object.getString ("updateLog"));
                 appVersion.setForcedUpdate (object.getBoolean ("forcedUpdate"));
                 appVersion.setApkUrl (object.getString ("apkUrl"));
-                appVersion.setApkSize (object.getDouble ("apkSize"));
+                appVersion.setApkSize (object.getLong ("apkSize"));
                 appVersion.setMd5 (object.getString ("md5"));
             }catch (Exception e){
                 LogUtil.e ("AppVersion",e);
@@ -71,13 +72,13 @@ public class ReflectUtil {
         UpdateInfo updateInfo = null;
         if(appVersion!=null){
             updateInfo = new UpdateInfo ();
-            updateInfo.isIgnorable = false;
+            updateInfo.isIgnorable = appVersion.isIgnorable ();
             updateInfo.isForce = appVersion.isForcedUpdate ();
             updateInfo.versionCode = appVersion.getVersionCode ();
             updateInfo.versionName = appVersion.getVersionName ();
             updateInfo.updateContent = appVersion.getUpdateLog ();
             updateInfo.md5 = appVersion.getMd5 ();
-            updateInfo.size = new Long (new Double (appVersion.getApkSize ()*1024*1024).longValue ());
+            updateInfo.size = new Long (appVersion.getApkSize ());
             updateInfo.url = appVersion.getApkUrl ();
         }
         return updateInfo;

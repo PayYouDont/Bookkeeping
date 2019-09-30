@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,9 +22,11 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.Expenditure;
 import com.example.bookkeeping.entity.PayMethod;
+import com.example.bookkeeping.service.DownLoadDialogListener;
 import com.example.bookkeeping.ui.EditFragment;
 import com.example.bookkeeping.ui.HistoryFragment;
 import com.example.bookkeeping.ui.HomeFragment;
+import com.example.bookkeeping.ui.SettingFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.litepal.LitePal;
@@ -35,6 +38,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity{
     public static Integer navBarHeight;
     BottomNavigationView navView;
+    public static String serverIP;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
@@ -44,25 +48,32 @@ public class MainActivity extends AppCompatActivity{
         NavController navController = Navigation.findNavController (this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController (this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController (navView, navController);
+        serverIP = getString (R.string.server_ip);
         //初始化消费类型表
         initExpenditureTable ();
         //初始化支付方式表
         initPayMothedTable ();
         navBarHeight = getNavigationBarHeight (this);
+        SettingFragment.checkVersion (new DownLoadDialogListener (this));
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK&&EditFragment.isCreated) {
-            Fragment fragment = null;
-            FragmentTransaction transaction = getSupportFragmentManager ().beginTransaction ();
-            if(navView.getSelectedItemId ()==R.id.navigation_home){
-                fragment = new HomeFragment ();
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(EditFragment.isCreated){
+                Fragment fragment = null;
+                FragmentTransaction transaction = getSupportFragmentManager ().beginTransaction ();
+                if(navView.getSelectedItemId ()==R.id.navigation_home){
+                    fragment = new HomeFragment ();
+                }else if(navView.getSelectedItemId ()==R.id.navigation_history){
+                    fragment = new HistoryFragment ();
+                }
+                transaction.replace (R.id.nav_host_fragment,fragment).commit ();
+                EditFragment.isCreated = false;
             }else if(navView.getSelectedItemId ()==R.id.navigation_history){
-                fragment = new HistoryFragment ();
+                View view = findViewById (R.id.navigation_home);
+                view.performClick();
             }
-            transaction.replace (R.id.nav_host_fragment,fragment).commit ();
-            EditFragment.isCreated = false;
             return true;
         }
         return super.onKeyDown (keyCode, event);
