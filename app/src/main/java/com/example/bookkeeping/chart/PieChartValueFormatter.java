@@ -14,6 +14,6 @@ public class PieChartValueFormatter extends ValueFormatter {
 
     @Override
     public String getPieLabel(float value, PieEntry pieEntry) {
-        return pieEntry.getLabel ()+":"+super.getPieLabel (value, pieEntry);
+        return pieEntry.getLabel ()+":"+mFormat.format (super.getPieLabel (value, pieEntry));
     }
 }
