@@ -90,7 +90,16 @@ public class HomeFragment extends BaseFragment {
         });
         hideLayout = root.findViewById (R.id.hide_layout);
         slidLayout = root.findViewById (R.id.slid_layout);
-        slidLayout.setOnTouchListener ((v, event) -> slidding (event));
+        //slidLayout.setOnTouchListener ((v, event) -> slidding (event));
+        slidLayout.setOnClickListener ((v) -> {
+            if(hideLayout.getVisibility ()==View.GONE){
+                hideLayout.setVisibility (View.VISIBLE);
+                slidLayout.getChildAt (0).setRotation (180);
+            }else{
+                hideLayout.setVisibility (View.GONE);
+                slidLayout.getChildAt (0).setRotation (0);
+            }
+        });
         setRootHeight (root);
         return root;
     }
@@ -247,7 +256,7 @@ public class HomeFragment extends BaseFragment {
     private boolean checkDateIsOut(Date expectedDate,Date endDate){
         return expectedDate.getTime ()-endDate.getTime ()>0;
     }
-    float mPosY=0,mCurPosY=0;
+    /*float mPosY=0,mCurPosY=0;
     private boolean slidding(MotionEvent event){
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -268,5 +277,5 @@ public class HomeFragment extends BaseFragment {
                 break;
         }
         return true;
-    }
+    }*/
 }

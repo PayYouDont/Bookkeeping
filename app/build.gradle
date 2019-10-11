@@ -48,6 +48,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.2.0'
     implementation 'com.github.Ajian-studio:GADownloading:v1.0.2'
     implementation 'com.github.czy1121:update:1.1.1'
+    implementation 'com.github.yuzhiqiang1993:zxing:2.2.5'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

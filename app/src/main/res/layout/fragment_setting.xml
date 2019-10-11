@@ -6,12 +6,8 @@
         android:orientation="vertical">
     <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-    <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:orientation="vertical">
         <ImageView
                 android:layout_width="80dp"
@@ -29,7 +25,7 @@
                 android:focusable="false"/>
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="#fff">
             <LinearLayout
@@ -110,7 +106,37 @@
                             android:textSize="@dimen/version_label_text_size"
                             android:text="反馈"/>
                 </LinearLayout>
+                <LinearLayout
+                        android:id="@+id/setting_synchronize_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:background="@drawable/border_bottom">
+                    <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            android:textSize="@dimen/version_label_text_size"
+                            android:text="数据迁移"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/setting_scan_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_scan"
+                app:backgroundTint="#1296db"
+                app:elevation="5dp"
+                app:pressedTranslationZ="12dp"
+                app:fabSize="normal"
+                app:borderWidth="0dp"
+                app:rippleColor="#cccccc"/>
     </LinearLayout>
 </LinearLayout>

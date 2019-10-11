@@ -1,16 +1,21 @@
 package com.example.bookkeeping;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -19,14 +24,17 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.Bill;
 import com.example.bookkeeping.entity.Expenditure;
 import com.example.bookkeeping.entity.PayMethod;
 import com.example.bookkeeping.service.DownLoadDialogListener;
+import com.example.bookkeeping.service.VersionTask;
 import com.example.bookkeeping.ui.EditFragment;
 import com.example.bookkeeping.ui.HistoryFragment;
 import com.example.bookkeeping.ui.HomeFragment;
 import com.example.bookkeeping.ui.SettingFragment;
+import com.example.bookkeeping.util.PermissionUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.litepal.LitePal;
@@ -53,8 +61,21 @@ public class MainActivity extends AppCompatActivity{
         initExpenditureTable ();
         //初始化支付方式表
         initPayMothedTable ();
+        initVersionInfo();
         navBarHeight = getNavigationBarHeight (this);
         SettingFragment.checkVersion (new DownLoadDialogListener (this));
+        Request();
+    }
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    void Request() {
+        //获取相机拍摄读写权限
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //版本判断
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.CAMERA}, 1);
+            }
+        }
     }
 
     @Override
@@ -70,11 +91,12 @@ public class MainActivity extends AppCompatActivity{
                 }
                 transaction.replace (R.id.nav_host_fragment,fragment).commit ();
                 EditFragment.isCreated = false;
+                return true;
             }else if(navView.getSelectedItemId ()==R.id.navigation_history){
                 View view = findViewById (R.id.navigation_home);
                 view.performClick();
+                return true;
             }
-            return true;
         }
         return super.onKeyDown (keyCode, event);
     }
@@ -95,6 +117,15 @@ public class MainActivity extends AppCompatActivity{
                 expenditure.setImageId (imageId);
                 expenditure.saveOrUpdate ("name='"+name+"'");
             });
+        }
+    }
+    public void initVersionInfo(){
+        AppVersion appVersion = LitePal.find (AppVersion.class,1);
+        if(appVersion==null){
+            new VersionTask (version -> {
+                version.setId (1);
+                version.save();
+            }).execute (serverIP + "/getVersion");
         }
     }
     //初始化PayMothed
