@@ -1,6 +1,9 @@
 package com.example.bookkeeping.util;
 
 import com.example.bookkeeping.entity.AppVersion;
+import com.example.bookkeeping.entity.Bill;
+import com.example.bookkeeping.entity.ProgressData;
+import com.example.bookkeeping.entity.SyncData;
 
 import org.json.JSONObject;
 import org.litepal.util.LogUtil;
@@ -62,7 +65,7 @@ public class ReflectUtil {
                 appVersion.setApkSize (object.getLong ("apkSize"));
                 appVersion.setMd5 (object.getString ("md5"));
             }catch (Exception e){
-                LogUtil.e ("AppVersion",e);
+                LogUtil.e ("ReflectUtil",e);
             }
         }
         return appVersion;
@@ -83,5 +86,83 @@ public class ReflectUtil {
         }
         return updateInfo;
     }
-
+    public static ProgressData parseToProgressData(String responseData){
+        ProgressData progressData = null;
+        if(responseData!=null){
+            try {
+                JSONObject object = new JSONObject (responseData);
+                progressData = new ProgressData ();
+                progressData.setId (object.getInt ("id"));
+                progressData.setTotal (object.getDouble ("total"));
+                progressData.setExpectedDate (object.getString ("expectedDate"));
+                progressData.setName (object.getString ("name"));
+                progressData.setStatus (object.getInt ("status"));
+                progressData.setRadioGroupCheckedId (object.getInt ("radioGroupCheckedId"));
+                progressData.setStartDate (object.getString ("startDate"));
+                progressData.setEndDate (object.getString ("endDate"));
+            }catch (Exception e){
+                LogUtil.e ("AppVersion",e);
+            }
+        }
+        return progressData;
+    }
+    public static Bill parseToBillData(String responseData){
+        Bill billData = null;
+        if(responseData!=null){
+            try {
+                JSONObject object = new JSONObject (responseData);
+                billData = new Bill ();
+                billData.setId (object.getInt ("id"));
+                billData.setAmount (object.getDouble ("amount"));
+                billData.setConsumptionTime (object.getString ("consumptionTime"));
+                billData.setExpenditureId (object.getInt ("expenditureId"));
+                billData.setPayMethodId (object.getInt ("methodId"));
+                billData.setRemark (object.getString ("remark"));
+            }catch (Exception e){
+                LogUtil.e ("ReflectUtil",e);
+            }
+        }
+        return billData;
+    }
+    public static SyncData parseToSyncData(String msg){
+        SyncData syncData = null;
+        if(msg!=null){
+            try {
+                JSONObject object = new JSONObject (msg);
+                syncData = new SyncData ();
+                Integer count = object.getInt ("count");
+                if(count!=null){
+                    syncData.setCount (count);
+                }
+                Integer progress = object.getInt ("progress");
+                if(progress!=null){
+                    syncData.setProgress (progress);
+                }
+                String requestData = object.getString ("requestData");
+                if(!StringUtil.isEmpty (requestData)){
+                    syncData.setRequestData (requestData);
+                }
+                String responseData = object.getString ("responseData");
+                if(!StringUtil.isEmpty (responseData)){
+                    syncData.setResponseData (responseData);
+                }
+                syncData.setType (object.getInt ("type"));
+            }catch (Exception e){
+                LogUtil.e ("ReflectUtil",e);
+            }
+        }
+        return syncData;
+    }
+    public static String toJson(Object o){
+        JSONObject object = new JSONObject ();
+        List<Field> fieldList = getFields (o.getClass ());
+        fieldList.forEach (field -> {
+            try {
+                object.put (field.getName (),field.get (o));
+            }catch (Exception e){
+                e.printStackTrace ();
+            }
+        });
+        return object.toString ();
+    }
 }

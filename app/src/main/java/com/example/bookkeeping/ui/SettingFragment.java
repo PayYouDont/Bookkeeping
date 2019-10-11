@@ -2,6 +2,7 @@ package com.example.bookkeeping.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -18,9 +20,12 @@ import com.example.bookkeeping.MainActivity;
 import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.BaseFragment;
+import com.example.bookkeeping.netty.NettyClient;
+import com.example.bookkeeping.netty.NettyServer;
 import com.example.bookkeeping.service.DownLoadDialogListener;
 import com.example.bookkeeping.service.VersionTask;
 import com.example.bookkeeping.util.ReflectUtil;
+import com.example.bookkeeping.util.StringUtil;
 import com.example.bookkeeping.util.VersionUtil;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.yzq.zxinglibrary.android.CaptureActivity;
@@ -31,12 +36,14 @@ import org.litepal.util.LogUtil;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
 import ezy.boost.update.UpdateInfo;
 import ezy.boost.update.UpdateManager;
+import io.netty.channel.ChannelFuture;
 
 public class SettingFragment extends BaseFragment {
     private View root;
@@ -46,6 +53,7 @@ public class SettingFragment extends BaseFragment {
     private FloatingActionButton scanBtn;
     private boolean hasNewVersion;
     private int REQUEST_CODE_SCAN = 111;
+    private int port = 8080;
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_setting, container, false);
         updateLayout = root.findViewById (R.id.setting_update_layout);
@@ -86,7 +94,11 @@ public class SettingFragment extends BaseFragment {
             updateMsg.setText (getString (R.string.version_label));
         }
         logLayout.setOnClickListener (v -> new VersionLogDialog (getContext (),LitePal.find (AppVersion.class,1)).show ());
-        synchronizeLayout.setOnClickListener (v -> new QRDialog (getContext (),getUrl()).show ());
+        synchronizeLayout.setOnClickListener (v -> {
+            //二维码窗口
+            new QRDialog (getContext (),getUrl()).show ();
+            nettServerRun ();
+        });
         descLayout.setOnClickListener (v -> Toast.makeText (getContext (),"待开发",Toast.LENGTH_SHORT).show ());
         feedbackLayout.setOnClickListener (v -> Toast.makeText (getContext (),"等待开发",Toast.LENGTH_SHORT).show ());
         scanBtn.setOnClickListener (v -> {
@@ -94,6 +106,25 @@ public class SettingFragment extends BaseFragment {
             Intent intent = new Intent(getContext (), CaptureActivity.class);
             startActivityForResult(intent, REQUEST_CODE_SCAN);
         });
+    }
+    private void nettServerRun(){
+        NettyServer nettyServer = new NettyServer ();
+        InetSocketAddress address = new InetSocketAddress(getIpAddressString(), port);
+        AsyncTask<String,String,String> asyncTask = new AsyncTask<String, String, String> () {
+            @Override
+            protected String doInBackground(String... strings) {
+                ChannelFuture future = nettyServer.run(address);
+                Runtime.getRuntime().addShutdownHook(new Thread(){
+                    @Override
+                    public void run() {
+                        nettyServer.destroy();
+                    }
+                });
+                future.channel().closeFuture().syncUninterruptibly();
+                return null;
+            }
+        };
+        asyncTask.execute ();
     }
     //接收扫描结果
     @Override
@@ -103,21 +134,27 @@ public class SettingFragment extends BaseFragment {
         if (requestCode == REQUEST_CODE_SCAN && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 String content = data.getStringExtra(Constant.CODED_CONTENT);
-                Toast.makeText (getContext (),"扫描结果为:"+content,Toast.LENGTH_SHORT).show ();
+                if(!StringUtil.isEmpty (content)&&content.indexOf (":")!=-1){
+                    String url = content.split (":")[0];
+                    InetSocketAddress address = new InetSocketAddress(url, port);
+                    NettyClient client = new NettyClient (address);
+                    client.start ();
+                }else{
+                    Toast.makeText (getContext (),"扫描结果为:"+content,Toast.LENGTH_SHORT).show ();
+                }
             }
         }
     }
 
     private String getUrl(){
-        String url = getIpAddressString ();
+        String url = getIpAddressString ()+":"+port;
         return url;
     }
     private String getIpAddressString() {
         try {
             for (Enumeration<NetworkInterface> enNetI = NetworkInterface.getNetworkInterfaces(); enNetI.hasMoreElements(); ) {
                 NetworkInterface netI = enNetI.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = netI
-                        .getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                for (Enumeration<InetAddress> enumIpAddr = netI.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAddr.nextElement();
                     if (inetAddress instanceof Inet4Address && !inetAddress.isLoopbackAddress()) {
                         return inetAddress.getHostAddress();
