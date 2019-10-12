@@ -124,7 +124,7 @@ public class NettyServer {
                 index = Integer.valueOf (syncData.getRequestData ());
                 Bill bill = billList.get (index);
                 syncData.setResponseData (JsonUtil.toJson (bill));
-                syncData.setProgress (syncData.getProgress ()*100/syncData.getCount ());
+                syncData.setProgress ((syncData.getProgress ()+1)*100/syncData.getCount ());
                 break;
             default:
                 break;
