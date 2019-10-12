@@ -1,9 +1,12 @@
 package com.example.bookkeeping.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import com.example.bookkeeping.entity.BaseFragment;
 import com.example.bookkeeping.netty.NettyClient;
 import com.example.bookkeeping.netty.NettyServer;
 import com.example.bookkeeping.service.DownLoadDialogListener;
+import com.example.bookkeeping.service.SyncTask;
 import com.example.bookkeeping.service.VersionTask;
 import com.example.bookkeeping.util.ReflectUtil;
 import com.example.bookkeeping.util.StringUtil;
@@ -34,6 +38,7 @@ import com.yzq.zxinglibrary.common.Constant;
 import org.litepal.LitePal;
 import org.litepal.util.LogUtil;
 
+import java.net.ConnectException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -44,6 +49,7 @@ import java.util.Enumeration;
 import ezy.boost.update.UpdateInfo;
 import ezy.boost.update.UpdateManager;
 import io.netty.channel.ChannelFuture;
+import lombok.Getter;
 
 public class SettingFragment extends BaseFragment {
     private View root;
@@ -54,6 +60,35 @@ public class SettingFragment extends BaseFragment {
     private boolean hasNewVersion;
     private int REQUEST_CODE_SCAN = 111;
     private int port = 8080;
+    private SyncTask syncTask;
+    public final static int PROGRESS=1;
+    public final static int START=0;
+    public final static int FINISH=2;
+    private DownLoadDialogListener downLoadDialogListener;
+    @Getter
+    private Handler handler = new Handler (){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage (msg);
+            switch (msg.what){
+                case START:
+                    downLoadDialogListener = new DownLoadDialogListener (getContext ());
+                    break;
+                case PROGRESS:
+                    int progress = (int)msg.obj;
+                    System.out.println ("进度："+progress);
+                    //onProgress (progress);
+                    //show ();
+                    downLoadDialogListener.onProgress (progress);
+                    break;
+                case FINISH:
+                    //onFinish ();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
     public View onCreateView(@NonNull LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         root = inflater.inflate (R.layout.fragment_setting, container, false);
         updateLayout = root.findViewById (R.id.setting_update_layout);
@@ -97,7 +132,12 @@ public class SettingFragment extends BaseFragment {
         synchronizeLayout.setOnClickListener (v -> {
             //二维码窗口
             new QRDialog (getContext (),getUrl()).show ();
-            nettServerRun ();
+            //nettServerRun ();
+            if(syncTask==null){
+                InetSocketAddress address = new InetSocketAddress(getIpAddressString(), port);
+                syncTask = new SyncTask (address);
+                syncTask.start ();
+            }
         });
         descLayout.setOnClickListener (v -> Toast.makeText (getContext (),"待开发",Toast.LENGTH_SHORT).show ());
         feedbackLayout.setOnClickListener (v -> Toast.makeText (getContext (),"等待开发",Toast.LENGTH_SHORT).show ());
@@ -107,25 +147,6 @@ public class SettingFragment extends BaseFragment {
             startActivityForResult(intent, REQUEST_CODE_SCAN);
         });
     }
-    private void nettServerRun(){
-        NettyServer nettyServer = new NettyServer ();
-        InetSocketAddress address = new InetSocketAddress(getIpAddressString(), port);
-        AsyncTask<String,String,String> asyncTask = new AsyncTask<String, String, String> () {
-            @Override
-            protected String doInBackground(String... strings) {
-                ChannelFuture future = nettyServer.run(address);
-                Runtime.getRuntime().addShutdownHook(new Thread(){
-                    @Override
-                    public void run() {
-                        nettyServer.destroy();
-                    }
-                });
-                future.channel().closeFuture().syncUninterruptibly();
-                return null;
-            }
-        };
-        asyncTask.execute ();
-    }
     //接收扫描结果
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -133,19 +154,30 @@ public class SettingFragment extends BaseFragment {
         // 扫描二维码/条码回传
         if (requestCode == REQUEST_CODE_SCAN && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                String content = data.getStringExtra(Constant.CODED_CONTENT);
-                if(!StringUtil.isEmpty (content)&&content.indexOf (":")!=-1){
-                    String url = content.split (":")[0];
-                    InetSocketAddress address = new InetSocketAddress(url, port);
-                    NettyClient client = new NettyClient (address);
-                    client.start ();
-                }else{
-                    Toast.makeText (getContext (),"扫描结果为:"+content,Toast.LENGTH_SHORT).show ();
-                }
+                //new AlertDialog (getContext ()).show ();
+                new SyncDataDialog (getContext (),() -> startMove(data)).show ();
             }
         }
     }
-
+    private void startMove(Intent data){
+        new Thread (()->{
+            String content = data.getStringExtra(Constant.CODED_CONTENT);
+            if(!StringUtil.isEmpty (content)&&content.indexOf (":")!=-1){
+                String url = content.split (":")[0];
+                InetSocketAddress address = new InetSocketAddress(url, port);
+                NettyClient client = new NettyClient (address,handler);
+                try {
+                    client.start ();
+                }catch (ConnectException ce){
+                    Toast.makeText (getContext (),"两台手机需要在同一wifi下才能迁移数据！",Toast.LENGTH_SHORT).show ();
+                }catch (Exception e){
+                    LogUtil.e ("SettingFragment",e);
+                }
+            }else{
+                Toast.makeText (getContext (),"扫描结果为:"+content,Toast.LENGTH_SHORT).show ();
+            }
+        }).start ();
+    }
     private String getUrl(){
         String url = getIpAddressString ()+":"+port;
         return url;
@@ -165,5 +197,14 @@ public class SettingFragment extends BaseFragment {
             LogUtil.e ("SettingFragment",e);
         }
         return "0.0.0.0";
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView ();
+        if(syncTask!=null){
+            syncTask.getNettyServer ().destroy ();
+            syncTask.interrupt ();
+        }
     }
 }

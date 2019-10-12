@@ -14,5 +14,12 @@
                 android:layout_height="30dp"
                 android:textSize="16dp"
                 android:layout_gravity="center"
-                android:text="请使用另一台设备扫码"/>
+                android:text="当前wifi：test"
+                android:textColor="@color/select_title_text"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:textSize="16dp"
+                android:layout_gravity="center"
+                android:text="请使用同一WiFi下的另一台设备扫码"/>
 </LinearLayout>
