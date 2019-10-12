@@ -15,7 +15,6 @@ public class ClientHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, Object msg) {
-        System.out.println ("客户端收到的msg="+msg);
         listener.msg (msg);
         ctx.channel().attr(AttributeKey.valueOf("Attribute_key")).set(msg);
         ctx.close();

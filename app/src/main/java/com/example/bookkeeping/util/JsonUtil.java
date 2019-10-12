@@ -41,7 +41,7 @@ public class JsonUtil {
 		public boolean shouldSkipClass(Class<?> clazz) {
 			return clazz.getAnnotation(GsonIgnore.class)!=null;
 		}
-		
+
 	}
 	 /**
      * 参数类型转换

@@ -2,8 +2,8 @@ package com.example.bookkeeping.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -24,7 +23,6 @@ import com.example.bookkeeping.R;
 import com.example.bookkeeping.entity.AppVersion;
 import com.example.bookkeeping.entity.BaseFragment;
 import com.example.bookkeeping.netty.NettyClient;
-import com.example.bookkeeping.netty.NettyServer;
 import com.example.bookkeeping.service.DownLoadDialogListener;
 import com.example.bookkeeping.service.SyncTask;
 import com.example.bookkeeping.service.VersionTask;
@@ -48,7 +46,6 @@ import java.util.Enumeration;
 
 import ezy.boost.update.UpdateInfo;
 import ezy.boost.update.UpdateManager;
-import io.netty.channel.ChannelFuture;
 import lombok.Getter;
 
 public class SettingFragment extends BaseFragment {
@@ -83,6 +80,9 @@ public class SettingFragment extends BaseFragment {
                     break;
                 case FINISH:
                     //onFinish ();
+                    downLoadDialogListener.onProgress (100);
+                    downLoadDialogListener.onFinish ();
+                    Toast.makeText (getActivity (),"数据迁移完成!",Toast.LENGTH_SHORT).show ();
                     break;
                 default:
                     break;

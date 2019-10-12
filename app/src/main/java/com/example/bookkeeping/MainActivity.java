@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -43,10 +45,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import ru.alexbykov.nopermission.PermissionHelper;
+
 public class MainActivity extends AppCompatActivity{
     public static Integer navBarHeight;
     BottomNavigationView navView;
     public static String serverIP;
+    private PermissionHelper permissionHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate (savedInstanceState);
@@ -65,6 +70,21 @@ public class MainActivity extends AppCompatActivity{
         navBarHeight = getNavigationBarHeight (this);
         SettingFragment.checkVersion (new DownLoadDialogListener (this));
         Request();
+        permissionHelper = new PermissionHelper(this);
+        getWifiSSid();
+    }
+    private void getWifiSSid() {
+        permissionHelper.check(Manifest.permission.ACCESS_FINE_LOCATION).onSuccess(() -> {
+
+        }).onDenied(() -> {
+            Toast.makeText (this,"权限被拒绝！将无法获取到WiFi信息!",Toast.LENGTH_SHORT).show ();
+        }).onNeverAskAgain(() -> {{
+            Toast.makeText (this,"权限被拒绝！将无法获取到WiFi信息,下次不会再询问了！",Toast.LENGTH_SHORT).show ();
+        }}).run();
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        permissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
     @RequiresApi(api = Build.VERSION_CODES.M)
     void Request() {

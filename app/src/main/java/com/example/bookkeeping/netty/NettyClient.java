@@ -10,6 +10,8 @@ import com.example.bookkeeping.ui.SettingFragment;
 import com.example.bookkeeping.util.JsonUtil;
 import com.example.bookkeeping.util.ReflectUtil;
 
+import org.litepal.LitePal;
+
 import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -72,7 +74,7 @@ public class NettyClient {
         f = bootstrap.connect(address).sync();
         // 传数据给服务端
         f.channel().writeAndFlush(data);
-        f.channel().closeFuture().sync();
+        //f.channel().closeFuture().sync();
         return f.channel().attr(AttributeKey.valueOf("Attribute_key")).get();
     }
     public void start() throws Exception{
@@ -102,7 +104,8 @@ public class NettyClient {
                 break;
             case 1:
                 ProgressData progressData = data.getProgressData ();
-                progressData.save ();
+                progressData.assignBaseObjId (0);
+                progressData.saveOrUpdate ("id="+progressData.getId ());
                 Integer index = Integer.valueOf (data.getRequestData ());
                 index++;
                 if(index<progressDataCount){
@@ -116,7 +119,8 @@ public class NettyClient {
                 break;
             case 2:
                 Bill bill = data.getBillData ();
-                bill.save ();
+                bill.assignBaseObjId (0);
+                bill.saveOrUpdate ("id="+bill.getId ());
                 index = Integer.valueOf (data.getRequestData ());
                 index++;
                 if(index<billCount){
@@ -132,7 +136,7 @@ public class NettyClient {
                     //downloadListener.onProgress (data.getProgress ());
                     Message message = new Message ();
                     message.what = SettingFragment.PROGRESS;
-                    message.obj = data.getProgress ();
+                    message.obj = data.getProgress ()*100/data.getCount ();
                     handler.sendMessage (message);
                 }
                 send (JsonUtil.toJson (data));

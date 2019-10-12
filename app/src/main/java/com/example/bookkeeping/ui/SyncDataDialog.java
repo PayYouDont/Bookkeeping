@@ -8,29 +8,33 @@ import android.widget.TextView;
 
 import com.example.bookkeeping.entity.AppVersion;
 
-public class SyncDataDialog extends AlertDialog{
+import lombok.Setter;
+
+public class SyncDataDialog{
     private OnSyncListener onSyncListener;
+    private AlertDialog alertDialog;
     public SyncDataDialog(Context context,OnSyncListener onSyncListener) {
-        super (context);
-        this.onSyncListener = onSyncListener;
-        setTitle("是否同步：");
-        setCancelable(false);
-        setCanceledOnTouchOutside(false);
         float density = context.getResources().getDisplayMetrics().density;
         TextView tv = new TextView(context);
         tv.setMovementMethod(new ScrollingMovementMethod ());
         tv.setVerticalScrollBarEnabled(true);
         tv.setTextSize(14);
         tv.setMaxHeight((int) (250 * density));
-        setView(tv, (int) (25 * density), (int) (15 * density), (int) (25 * density), 0);
         String content = String.format("是否现在开始同步？");
         tv.setText(content);
-        setButton(DialogInterface.BUTTON_POSITIVE, "确定",(dialog, which) -> {
-            dismiss ();
+        AlertDialog.Builder builder = new AlertDialog.Builder (context);
+        builder.setPositiveButton("确认",(dialogInterface, i) ->{
+            alertDialog.dismiss ();
             onSyncListener.startSync ();
         });
+        builder.setNegativeButton ("取消",(dialogInterface, i) -> alertDialog.dismiss ());
+        alertDialog = builder.create ();
+        alertDialog.setView (tv, (int) (25 * density), (int) (15 * density), (int) (25 * density), 0);
     }
     public interface OnSyncListener{
         void startSync();
+    }
+    public void show(){
+        alertDialog.show ();
     }
 }

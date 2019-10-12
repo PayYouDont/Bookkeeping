@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.bookkeeping.R;
+import com.example.bookkeeping.util.NetWorkUtil;
 import com.yzq.zxinglibrary.encode.CodeCreator;
 
 public class QRDialog extends AlertDialog {
@@ -19,6 +21,8 @@ public class QRDialog extends AlertDialog {
         View view = inflater.inflate (R.layout.qr_dialog,null);
         ImageView imageView = view.findViewById (R.id.qr_img);
         imageView.setImageBitmap (bitmap);
+        TextView textView = view.findViewById (R.id.qr_wifi_name);
+        textView.setText ("当前wifi："+ NetWorkUtil.getWIFISSID (context));
         setView(view);
         setButton(DialogInterface.BUTTON_POSITIVE, "确定",(dialog, which) -> dismiss ());
     }

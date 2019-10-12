@@ -7,8 +7,8 @@ android {
         applicationId "com.example.bookkeeping"
         minSdkVersion 24
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.13"
+        versionCode 9
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -51,6 +51,7 @@ dependencies {
     implementation 'com.github.yuzhiqiang1993:zxing:2.2.5'
     implementation 'io.netty:netty-all:5.0.0.Alpha2'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'ru.alexbykov:nopermission:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'

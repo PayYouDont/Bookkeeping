@@ -98,6 +98,7 @@ public class NettyServer {
     private int getCount(){
         progressDataList = LitePal.findAll (ProgressData.class);
         billList = LitePal.findAll (Bill.class);
+        count = 0;
         count += progressDataList.size ();
         count +=billList.size ();
         return count;
@@ -124,7 +125,7 @@ public class NettyServer {
                 index = Integer.valueOf (syncData.getRequestData ());
                 Bill bill = billList.get (index);
                 syncData.setResponseData (JsonUtil.toJson (bill));
-                syncData.setProgress ((syncData.getProgress ()+1)*100/syncData.getCount ());
+                syncData.setProgress (syncData.getProgress ()+1);
                 break;
             default:
                 break;
